@@ -37,7 +37,7 @@ func (c *Config) errorEmptyValue(key string) error {
 	}
 
 	if f.String() == "" {
-		return fmt.Errorf("Config.%s is undefined.", key)
+		return fmt.Errorf("Config.%s is empty.", key)
 	}
 
 	return nil
