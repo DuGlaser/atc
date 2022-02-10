@@ -27,6 +27,16 @@ func GetAtcoderUrl(p ...string) string {
 	return u.String() + "?lang=ja"
 }
 
+func SetCookie(req *http.Request) error {
+	session, err := auth.GetSession()
+	if err != nil {
+		return err
+	}
+
+	req.Header.Add("Cookie", session)
+	return nil
+}
+
 func FetchAuthSession(username, password string) (*http.Response, error) {
 	jar, err := cookiejar.New(nil)
 	if err != nil {
@@ -68,12 +78,10 @@ func FetchContestPage(contest string) (*http.Response, error) {
 	if err != nil {
 		return nil, err
 	}
-	session, err := auth.GetSession()
-	if err != nil {
+
+	if err := SetCookie(req); err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Cookie", session)
 
 	return client.Do(req)
 }
@@ -91,12 +99,10 @@ func FetchSubmitPage(contest string) (*http.Response, error) {
 	if err != nil {
 		return nil, err
 	}
-	session, err := auth.GetSession()
-	if err != nil {
+
+	if err := SetCookie(req); err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Cookie", session)
 
 	return client.Do(req)
 }
@@ -107,12 +113,10 @@ func FetchHomePage() (*http.Response, error) {
 	if err != nil {
 		return nil, err
 	}
-	session, err := auth.GetSession()
-	if err != nil {
+
+	if err := SetCookie(req); err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Cookie", session)
 
 	return client.Do(req)
 }
@@ -133,12 +137,10 @@ func PostProblemAnswer(contest, problem, lang, code string) (*http.Response, err
 	if err != nil {
 		return nil, err
 	}
-	session, err := auth.GetSession()
-	if err != nil {
+
+	if err := SetCookie(req); err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Cookie", session)
 
 	res, err := client.Do(req)
 	if err != nil {
