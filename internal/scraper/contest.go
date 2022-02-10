@@ -26,7 +26,6 @@ func NewContestPage(r io.Reader) (*ContestPage, error) {
 
 func (cp *ContestPage) GetProblemIds() []string {
 	ps := []string{}
-	//table tbody tr > td:first-child
 	cp.doc.Find("div#contest-statement h3").Each(func(i int, s *goquery.Selection) {
 		if s.Text() == "配点" {
 			s.Next().Find("table tbody tr > td:first-child").Each(func(i int, s *goquery.Selection) {
