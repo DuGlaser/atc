@@ -93,6 +93,7 @@ func testAnswer(problemId string) {
 		}
 
 		got := strings.TrimRight(string(out), "\n")
+		got = strings.TrimSpace(got)
 
 		if got == test.Out {
 			fmt.Printf("sample test case 1 ... %s\n", color.GreenString("success"))
