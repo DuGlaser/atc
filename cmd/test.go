@@ -96,10 +96,10 @@ func testAnswer(problemId string) {
 		got = strings.TrimSpace(got)
 
 		if got == test.Out {
-			fmt.Printf("sample test case 1 ... %s\n", color.GreenString("success"))
+			fmt.Printf("sample test case %d ... %s\n", i+1, color.GreenString("success"))
 		} else {
-			fmt.Printf("sample test case 1 ... %s\n", color.RedString("failed"))
-			failures = append(failures, result{id: i, in: test.In, expected: test.Out, got: got})
+			fmt.Printf("sample test case %d ... %s\n", i+1, color.RedString("failed"))
+			failures = append(failures, result{id: i + 1, in: test.In, expected: test.Out, got: got})
 		}
 	}
 
