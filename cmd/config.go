@@ -24,11 +24,6 @@ var configCmd = &cobra.Command{
 
 		ls := sp.GetLanguageIds()
 
-		names := []string{}
-
-		for _, l := range ls {
-			names = append(names, l.Name)
-		}
 		searcher := func(input string, index int) bool {
 			l := ls[index]
 			name := strings.Replace(strings.ToLower(l.Name), " ", "", -1)
