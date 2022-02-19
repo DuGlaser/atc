@@ -92,12 +92,27 @@ func testAnswer(problemId string) {
 			cobra.CheckErr(stderr.String())
 		}
 
-		got := strings.TrimRight(string(out), "\n")
-		got = strings.TrimSpace(got)
+		got := strings.TrimSpace(string(out))
+		got = strings.TrimLeft(got, "\n")
+
+		outLines := strings.Split(got, "\n")
+		testLines := strings.Split(test.Out, "\n")
+
+		pass := true
+		if len(outLines) != len(testLines) {
+			pass = false
+		} else {
+			for i := range outLines {
+				if strings.TrimSpace(outLines[i]) != strings.TrimSpace(testLines[i]) {
+					pass = false
+					break
+				}
+			}
+		}
 
 		f := fmt.Sprintf("sample test case %d", i+1)
 
-		if got == test.Out {
+		if pass {
 			fmt.Printf("%s ... %s\n", f, color.GreenString("success"))
 		} else {
 			fmt.Printf("%s ... %s\n", f, color.RedString("failed"))
