@@ -13,16 +13,12 @@ type Config struct {
 }
 
 func (c *Config) Validate() error {
-	if err := c.errorEmptyValue("Cmd"); err != nil {
-		return err
-	}
+	keys := []string{"Cmd", "Lang", "FileName"}
 
-	if err := c.errorEmptyValue("Lang"); err != nil {
-		return err
-	}
-
-	if err := c.errorEmptyValue("FileName"); err != nil {
-		return err
+	for _, key := range keys {
+		if err := c.errorEmptyValue(key); err != nil {
+			return err
+		}
 	}
 
 	return nil

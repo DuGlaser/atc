@@ -95,10 +95,12 @@ func testAnswer(problemId string) {
 		got := strings.TrimRight(string(out), "\n")
 		got = strings.TrimSpace(got)
 
+		f := fmt.Sprintf("sample test case %d", i+1)
+
 		if got == test.Out {
-			fmt.Printf("sample test case %d ... %s\n", i+1, color.GreenString("success"))
+			fmt.Printf("%s ... %s\n", f, color.GreenString("success"))
 		} else {
-			fmt.Printf("sample test case %d ... %s\n", i+1, color.RedString("failed"))
+			fmt.Printf("%s ... %s\n", f, color.RedString("failed"))
 			failures = append(failures, result{id: i + 1, in: test.In, expected: test.Out, got: got})
 		}
 	}
@@ -106,15 +108,21 @@ func testAnswer(problemId string) {
 	for _, result := range failures {
 		fmt.Println()
 		color.New(color.Bold).Printf("=== sample test case %d ===\n", result.id)
-		fmt.Println()
-		color.Cyan("input:")
-		printResultValue(result.in)
-		fmt.Println()
-		color.Green("expected:")
-		printResultValue(result.expected)
-		fmt.Println()
-		color.Red("your output:")
-		printResultValue(result.got)
+
+		logs := []struct {
+			label   string
+			content string
+		}{
+			{label: color.CyanString("input: "), content: result.in},
+			{label: color.GreenString("expected: "), content: result.expected},
+			{label: color.RedString("your output: "), content: result.got},
+		}
+
+		for _, log := range logs {
+			fmt.Println()
+			fmt.Println(log.label)
+			printResultValue(log.content)
+		}
 	}
 
 	if len(failures) > 0 {
