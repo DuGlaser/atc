@@ -73,7 +73,6 @@ func FetchAuthSession(username, password string) (*http.Response, error) {
 }
 
 func FetchContestPage(contest string) (*http.Response, error) {
-	client := &http.Client{}
 	req, err := http.NewRequest("GET", GetAtcoderUrl("contests", contest), nil)
 	if err != nil {
 		return nil, err
@@ -83,14 +82,36 @@ func FetchContestPage(contest string) (*http.Response, error) {
 		return nil, err
 	}
 
-	return client.Do(req)
+	client := &http.Client{}
+	res, err := client.Do(req)
+	if res.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("Could not access %s contest.", contest)
+	}
+
+	return res, nil
 }
 
 func FetchProblemPage(contest, problem string) (*http.Response, error) {
 	c := strings.ToLower(contest)
 	p := strings.ToLower(problem)
+	id := fmt.Sprintf("%s_%s", c, p)
 
-	return http.Get(GetAtcoderUrl("contests", c, "tasks", fmt.Sprintf("%s_%s", c, p)))
+	req, err := http.NewRequest("GET", GetAtcoderUrl("contests", c, "tasks", id), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := SetCookie(req); err != nil {
+		return nil, err
+	}
+
+	client := &http.Client{}
+	res, err := client.Do(req)
+	if res.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("Could not access %s problem.", id)
+	}
+
+	return res, nil
 }
 
 func FetchSubmitPage(contest string) (*http.Response, error) {
