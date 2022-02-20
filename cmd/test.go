@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 
 	"github.com/DuGlaser/atc/internal"
@@ -148,7 +149,7 @@ func testAnswer(problemId string) {
 func printResultValue(v string) {
 	ss := strings.Split(v, "\n")
 
-	maxL := len(ss)/10 + 1
+	maxL := len(strconv.Itoa(len(ss))) + 1
 
 	for i, s := range ss {
 		fmt.Printf("%*d | %s\n", maxL, i+1, s)
