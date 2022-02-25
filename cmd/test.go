@@ -55,7 +55,7 @@ func testAnswer(problemId string) {
 	var task internal.Task
 	v.UnmarshalKey(fmt.Sprintf("tasks.%s", problemId), &task)
 
-	res, err := fetcher.FetchProblemPage(contest.Name, problemId)
+	res, err := fetcher.FetchProblemPage(contest.Name, task.ID)
 	cobra.CheckErr(err)
 	defer res.Body.Close()
 

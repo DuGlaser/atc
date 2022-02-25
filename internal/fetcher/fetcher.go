@@ -91,6 +91,27 @@ func FetchContestPage(contest string) (*http.Response, error) {
 	return res, nil
 }
 
+func FetchProblems(contest string) (*http.Response, error) {
+	c := strings.ToLower(contest)
+
+	req, err := http.NewRequest("GET", GetAtcoderUrl("contests", c, "tasks"), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := SetCookie(req); err != nil {
+		return nil, err
+	}
+
+	client := &http.Client{}
+	res, err := client.Do(req)
+	if res.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("Could not access %s problems.", c)
+	}
+
+	return res, nil
+}
+
 func FetchProblemPage(contest, problem string) (*http.Response, error) {
 	c := strings.ToLower(contest)
 	p := strings.ToLower(problem)

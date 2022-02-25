@@ -36,7 +36,7 @@ func (cp *ProblemPage) GetProblemSamples() ([]*Sample, error) {
 	ins := []string{}
 	outs := []string{}
 
-	cp.doc.Find("div#task-statement span.lang-ja section").Each(func(i int, s *goquery.Selection) {
+	cp.doc.Find("div#task-statement div.part").Each(func(i int, s *goquery.Selection) {
 		t := s.Find("h3").Text()
 
 		p := s.Find("pre").Text()

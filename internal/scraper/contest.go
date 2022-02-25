@@ -3,7 +3,9 @@ package scraper
 import (
 	"errors"
 	"io"
+	"strings"
 
+	"github.com/DuGlaser/atc/internal"
 	"github.com/PuerkitoBio/goquery"
 )
 
@@ -24,12 +26,13 @@ func NewContestPage(r io.Reader) (*ContestPage, error) {
 	return s, nil
 }
 
-func (cp *ContestPage) GetProblemIds() []string {
-	ps := []string{}
+func (cp *ContestPage) GetProblemIds() []internal.Problem {
+	ps := []internal.Problem{}
 	cp.doc.Find("div#contest-statement h3").Each(func(i int, s *goquery.Selection) {
 		if s.Text() == "配点" {
 			s.Next().Find("table tbody tr > td:first-child").Each(func(i int, s *goquery.Selection) {
-				ps = append(ps, s.Text())
+				t := strings.ToLower(s.Text())
+				ps = append(ps, internal.Problem{ID: t, DisplayedID: t})
 			})
 		}
 	})

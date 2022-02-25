@@ -38,3 +38,18 @@ func (c *Config) errorEmptyValue(key string) error {
 
 	return nil
 }
+
+type Contest struct {
+	Name string
+	Url  string
+}
+
+type Task struct {
+	ID   string
+	Path string
+}
+
+type Problem struct {
+	ID          string
+	DisplayedID string
+}

@@ -33,11 +33,20 @@ func createProject(contest string) {
 	cp, err := scraper.NewContestPage(res.Body)
 	cobra.CheckErr(err)
 
-	// TODO: 古いコンテストではコンテストページに問題がない場合がある
-	// TODO: 大文字ではなく小文字にする
 	ids := cp.GetProblemIds()
 	if len(ids) == 0 {
-		cobra.CheckErr(fmt.Sprintf("Problems doesn't exists in %s.\n", contest))
+		res, err = fetcher.FetchProblems(contest)
+		cobra.CheckErr(err)
+		defer res.Body.Close()
+
+		tp, err := scraper.NewTasksPage(res.Body)
+		cobra.CheckErr(err)
+
+		ids = tp.GetProblemIds()
+
+		if len(ids) == 0 {
+			cobra.CheckErr(fmt.Sprintf("Problems doesn't exists in %s.\n", contest))
+		}
 	}
 
 	wd, err := os.Getwd()
@@ -66,9 +75,9 @@ func createProject(contest string) {
 	v.Set("contest.url", fetcher.GetAtcoderUrl("contests", contest))
 
 	for _, id := range ids {
-		key := fmt.Sprintf("tasks.%s", id)
+		key := fmt.Sprintf("tasks.%s", id.DisplayedID)
 
-		dir := path.Join(contestPath, id)
+		dir := path.Join(contestPath, id.DisplayedID)
 		err = os.Mkdir(dir, 0754)
 		cobra.CheckErr(err)
 
@@ -79,7 +88,7 @@ func createProject(contest string) {
 		_, err = f.WriteString(c.Template)
 		cobra.CheckErr(err)
 
-		v.Set(fmt.Sprintf("%s.id", key), id)
+		v.Set(fmt.Sprintf("%s.id", key), id.ID)
 		v.Set(fmt.Sprintf("%s.path", key), fp)
 	}
 
