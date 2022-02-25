@@ -65,6 +65,11 @@ func testAnswer(problemId string) {
 	tests, err := pp.GetProblemSamples()
 	cobra.CheckErr(err)
 
+	if len(tests) == 0 {
+		cobra.CheckErr(fmt.Errorf("%s_%s has no tests.",
+			strings.ToLower(contest.Name), strings.ToLower(task.ID)))
+	}
+
 	tmpl, err := template.New("test").Parse(config.Cmd)
 	cobra.CheckErr(err)
 
