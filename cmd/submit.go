@@ -50,7 +50,7 @@ func submitAnswer(problemId string) {
 	bytes, err := ioutil.ReadFile(task.Path)
 	cobra.CheckErr(err)
 
-	_, err = fetcher.PostProblemAnswer(contest.Name, problemId, config.Lang, string(bytes))
+	_, err = fetcher.PostProblemAnswer(contest.Name, task.ID, config.Lang, string(bytes))
 	cobra.CheckErr(err)
 
 	err = openbrowser(fetcher.GetAtcoderUrl("contests", contest.Name, "submissions", "me"))
