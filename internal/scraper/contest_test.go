@@ -1,7 +1,6 @@
 package scraper
 
 import (
-	"reflect"
 	"strings"
 	"testing"
 )
@@ -103,7 +102,7 @@ func TestGetProblemIds(t *testing.T) {
 </div>
   `
 
-	expect := []string{"A", "B", "C", "D", "E", "F", "G"}
+	expect := []string{"a", "b", "c", "d", "e", "f", "g"}
 
 	cp, err := NewContestPage(strings.NewReader(test))
 	if err != nil {
@@ -112,7 +111,15 @@ func TestGetProblemIds(t *testing.T) {
 
 	ids := cp.GetProblemIds()
 
-	if !reflect.DeepEqual(ids, expect) {
-		t.Errorf("ids has wrong value. got=%v, want=%v.", ids, expect)
+	if len(ids) != len(expect) {
+		t.Fatalf("ids has wrong value. got=%v.", ids)
+	}
+
+	for i, _ := range ids {
+		id := ids[i].DisplayedID
+
+		if id != expect[i] {
+			t.Errorf("ids has wrong value. got=%v, want=%v.", ids, expect)
+		}
 	}
 }
