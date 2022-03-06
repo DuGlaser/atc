@@ -39,7 +39,7 @@ func (cp *ProblemPage) GetProblemSamples() ([]*Sample, error) {
 	cp.doc.Find("div#task-statement div.part").Each(func(i int, s *goquery.Selection) {
 		t := s.Find("h3").Text()
 
-		p := s.Find("pre").Text()
+		p := s.Find("pre").First().Text()
 		p = strings.TrimSpace(p)
 		p = strings.TrimRight(p, "\n")
 
