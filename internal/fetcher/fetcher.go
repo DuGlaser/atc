@@ -115,7 +115,7 @@ func FetchProblems(contest string) (*http.Response, error) {
 func FetchProblemPage(contest, problem string) (*http.Response, error) {
 	c := strings.ToLower(contest)
 	p := strings.ToLower(problem)
-	id := fmt.Sprintf("%s_%s", c, p)
+	id := fmt.Sprintf("%s_%s", strings.ReplaceAll(c, "-", "_"), p)
 
 	req, err := http.NewRequest("GET", GetAtcoderUrl("contests", c, "tasks", id), nil)
 	if err != nil {
