@@ -199,10 +199,8 @@ func PostProblemAnswer(contest, problem, lang, code string) (*http.Response, err
 		return nil, err
 	}
 
-	c := strings.ReplaceAll(strings.ToLower(contest), "-", "_")
-
 	form := url.Values{}
-	form.Add("data.TaskScreenName", fmt.Sprintf("%s_%s", c, strings.ToLower(problem)))
+	form.Add("data.TaskScreenName", problem)
 	form.Add("data.LanguageId", lang)
 	form.Add("csrf_token", csrf)
 	form.Add("sourceCode", code)
