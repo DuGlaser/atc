@@ -115,9 +115,8 @@ func FetchProblems(contest string) (*http.Response, error) {
 func FetchProblemPage(contest, problem string) (*http.Response, error) {
 	c := strings.ToLower(contest)
 	p := strings.ToLower(problem)
-	id := fmt.Sprintf("%s_%s", strings.ReplaceAll(c, "-", "_"), p)
 
-	req, err := http.NewRequest("GET", GetAtcoderUrl("contests", c, "tasks", id), nil)
+	req, err := http.NewRequest("GET", GetAtcoderUrl("contests", c, "tasks", p), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -129,7 +128,7 @@ func FetchProblemPage(contest, problem string) (*http.Response, error) {
 	client := &http.Client{}
 	res, err := client.Do(req)
 	if res.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("Could not access %s problem.", id)
+		return nil, fmt.Errorf("Could not access %s problem.", p)
 	}
 
 	return res, nil

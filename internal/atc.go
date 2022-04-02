@@ -50,6 +50,8 @@ type Task struct {
 }
 
 type Problem struct {
-	ID          string
-	DisplayedID string
+	// URLに使われる、コンテスト内の問題を一意に識別するID
+	ID string
+	// 問題ページで表示される一意なID
+	DisplayID string
 }

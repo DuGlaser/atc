@@ -75,9 +75,9 @@ func createProject(contest string) {
 	v.Set("contest.url", fetcher.GetAtcoderUrl("contests", contest))
 
 	for _, id := range ids {
-		key := fmt.Sprintf("tasks.%s", id.DisplayedID)
+		key := fmt.Sprintf("tasks.%s", id.DisplayID)
 
-		dir := path.Join(contestPath, id.DisplayedID)
+		dir := path.Join(contestPath, id.DisplayID)
 		err = os.Mkdir(dir, 0754)
 		cobra.CheckErr(err)
 

@@ -47,6 +47,16 @@ func submitAnswer(problemId string) {
 	var task internal.Task
 	v.UnmarshalKey(fmt.Sprintf("tasks.%s", problemId), &task)
 
+	if task.ID == "" {
+		id, err := getProblemID(contest.Name, problemId)
+		cobra.CheckErr(err)
+
+		key := fmt.Sprintf("tasks.%s", id.DisplayID)
+		v.Set(fmt.Sprintf("%s.id", key), id.ID)
+		cobra.CheckErr(v.WriteConfig())
+		task.ID = id.ID
+	}
+
 	bytes, err := ioutil.ReadFile(task.Path)
 	cobra.CheckErr(err)
 

@@ -55,6 +55,16 @@ func testAnswer(problemId string) {
 	var task internal.Task
 	v.UnmarshalKey(fmt.Sprintf("tasks.%s", problemId), &task)
 
+	if task.ID == "" {
+		id, err := getProblemID(contest.Name, problemId)
+		cobra.CheckErr(err)
+
+		key := fmt.Sprintf("tasks.%s", id.DisplayID)
+		v.Set(fmt.Sprintf("%s.id", key), id.ID)
+		cobra.CheckErr(v.WriteConfig())
+		task.ID = id.ID
+	}
+
 	res, err := fetcher.FetchProblemPage(contest.Name, task.ID)
 	cobra.CheckErr(err)
 	defer res.Body.Close()
@@ -149,6 +159,22 @@ func testAnswer(problemId string) {
 	if len(failures) > 0 {
 		os.Exit(1)
 	}
+}
+
+func getProblemID(contest string, displayID string) (*internal.Problem, error) {
+	res, err := fetcher.FetchProblems(contest)
+	if err != nil {
+		return nil, err
+	}
+
+	defer res.Body.Close()
+	tp, err := scraper.NewTasksPage(res.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	p := tp.GetProblemId(displayID)
+	return p, nil
 }
 
 func printResultValue(v string) {
