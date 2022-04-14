@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/DuGlaser/atc/internal/auth"
-	"github.com/DuGlaser/atc/internal/scraper"
+	"github.com/DuGlaser/atc/internal/repository/scraper"
 )
 
 const ATCODER_URL = "https://atcoder.jp/"

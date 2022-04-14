@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/DuGlaser/atc/internal/fetcher"
-	"github.com/DuGlaser/atc/internal/scraper"
+	"github.com/DuGlaser/atc/internal/repository/fetcher"
+	"github.com/DuGlaser/atc/internal/repository/scraper"
 	"github.com/spf13/cobra"
 )
 
