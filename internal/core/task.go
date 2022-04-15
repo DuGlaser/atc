@@ -2,6 +2,7 @@ package core
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"io"
 	"os/exec"
@@ -38,7 +39,7 @@ func (t *Task) ExecCode(input string, verbose bool) (string, error) {
 
 	out, err := cmd.Output()
 	if err != nil {
-		return "", err
+		return "", errors.New(stderr.String())
 	}
 
 	got := strings.TrimSpace(string(out))
@@ -61,9 +62,12 @@ func (t *Task) BuildCode(verbose bool) error {
 	}
 
 	cmd := exec.Command("sh", "-c", t.BuildCmd)
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
+
 	_, err := cmd.Output()
 	if err != nil {
-		return err
+		return errors.New(stderr.String())
 	}
 
 	t.alreadyBuild = true
