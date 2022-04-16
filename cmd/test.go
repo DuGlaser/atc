@@ -13,7 +13,7 @@ var testCmd = &cobra.Command{
 	Args:    cobra.MinimumNArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
 		displayID := args[0]
-		handler.TestCode(displayID, true)
+		handler.TestCode(displayID, verbose)
 	},
 }
 

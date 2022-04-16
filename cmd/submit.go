@@ -15,9 +15,9 @@ var submitCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		displayID := args[0]
 		if !skipTests {
-			handler.TestCode(displayID, true)
+			handler.TestCode(displayID, verbose)
 		}
-		handler.SubmitCode(displayID, true)
+		handler.SubmitCode(displayID, verbose)
 	},
 }
 
