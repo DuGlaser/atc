@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"html/template"
+	"os"
 	"strconv"
 	"strings"
 
@@ -69,6 +70,10 @@ func TestCode(displayID string, verbose bool) {
 
 	failures := execTestCase(c.String(), tests, verbose)
 	printFailedCase(failures)
+	if len(failures) > 0 {
+		fmt.Println("")
+		os.Exit(1)
+	}
 }
 
 func execTestCase(runCmd string, tests []*core.TestCase, verbose bool) []result {
