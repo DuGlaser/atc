@@ -39,14 +39,14 @@ func (cc *ContestConfig) ReadConfig() (*core.Config, error) {
 		return cc.config, nil
 	}
 
-	var config *core.Config
-	err := cc.v.UnmarshalKey("config", config)
+	var config core.Config
+	err := cc.v.UnmarshalKey("config", &config)
 	if err != nil {
 		return nil, err
 	}
 
-	cc.config = config
-	return config, nil
+	cc.config = &config
+	return &config, nil
 }
 
 func (cc *ContestConfig) ReadContestSetting() (*internal.Contest, error) {
@@ -54,15 +54,15 @@ func (cc *ContestConfig) ReadContestSetting() (*internal.Contest, error) {
 		return cc.contest, nil
 	}
 
-	var contest *internal.Contest
-	err := cc.v.UnmarshalKey("contest", contest)
+	var contest internal.Contest
+	err := cc.v.UnmarshalKey("contest", &contest)
 	if err != nil {
 		return nil, err
 	}
 
-	cc.contest = contest
+	cc.contest = &contest
 
-	return contest, nil
+	return &contest, nil
 }
 
 func (cc *ContestConfig) ReadTaskSetting(displayID string) (*internal.Task, error) {
@@ -70,15 +70,15 @@ func (cc *ContestConfig) ReadTaskSetting(displayID string) (*internal.Task, erro
 		return cc.task, nil
 	}
 
-	var task *internal.Task
-	err := cc.v.UnmarshalKey(fmt.Sprintf("tasks.%s", displayID), task)
+	var task internal.Task
+	err := cc.v.UnmarshalKey(fmt.Sprintf("tasks.%s", displayID), &task)
 	if err != nil {
 		return nil, err
 	}
 
-	cc.task = task
+	cc.task = &task
 
-	return task, nil
+	return &task, nil
 }
 
 // FIXME: configの中にfetchがあるのは違和感がある
