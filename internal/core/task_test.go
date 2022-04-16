@@ -16,9 +16,9 @@ func TestExecCode(t *testing.T) {
 			output:   "OK",
 		},
 		{
-			task:     Task{RunCmd: "go run ../../test/compile_error.go", BuildCmd: ""},
+			task:     Task{RunCmd: "go run ../../test/syntax_error.go", BuildCmd: ""},
 			hasError: true,
-			output:   "# command-line-arguments\n../../test/compile_error.go:6:19: syntax error: unexpected newline, expecting comma or )\n",
+			output:   "# command-line-arguments\n../../test/syntax_error.go:6:19: syntax error: unexpected newline, expecting comma or )\n",
 		},
 	}
 
@@ -49,9 +49,9 @@ func TestBuildCode(t *testing.T) {
 			output:   "",
 		},
 		{
-			task:     Task{RunCmd: "", BuildCmd: "go build ../../test/compile_error.go"},
+			task:     Task{RunCmd: "", BuildCmd: "go build ../../test/syntax_error.go"},
 			hasError: true,
-			output:   "# command-line-arguments\n../../test/compile_error.go:6:19: syntax error: unexpected newline, expecting comma or )\n",
+			output:   "# command-line-arguments\n../../test/syntax_error.go:6:19: syntax error: unexpected newline, expecting comma or )\n",
 		},
 	}
 
