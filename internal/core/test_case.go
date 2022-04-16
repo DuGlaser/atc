@@ -8,8 +8,11 @@ type TestCase struct {
 }
 
 func (tc *TestCase) Compare(result string) bool {
+	result = strings.TrimRight(result, "\n")
+	expected := strings.TrimRight(tc.Expected, "\n")
+
 	results := strings.Split(result, "\n")
-	expecteds := strings.Split(tc.Expected, "\n")
+	expecteds := strings.Split(expected, "\n")
 
 	pass := true
 	if len(results) != len(expecteds) {
