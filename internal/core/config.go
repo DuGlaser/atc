@@ -6,14 +6,15 @@ import (
 )
 
 type Config struct {
-	Cmd      string
+	RunCmd   string
+	BuildCmd string
 	Lang     string
 	FileName string
 	Template string
 }
 
 func (c *Config) Validate() error {
-	keys := []string{"Cmd", "Lang", "FileName"}
+	keys := []string{"RunCmd", "Lang", "FileName"}
 
 	for _, key := range keys {
 		if err := c.errorEmptyValue(key); err != nil {

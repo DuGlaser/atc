@@ -14,10 +14,10 @@ func TestValidate(t *testing.T) {
 		input  Config
 		expect error
 	}{
-		{input: Config{Cmd: "", Lang: "", FileName: "", Template: ""}, expect: createEmptyError("Cmd")},
-		{input: Config{Cmd: "Cmd", Lang: "", FileName: "", Template: ""}, expect: createEmptyError("Lang")},
-		{input: Config{Cmd: "Cmd", Lang: "Lang", FileName: "", Template: ""}, expect: createEmptyError("FileName")},
-		{input: Config{Cmd: "Cmd", Lang: "Lang", FileName: "FileName", Template: ""}, expect: nil},
+		{input: Config{RunCmd: "", BuildCmd: "", Lang: "", FileName: "", Template: ""}, expect: createEmptyError("RunCmd")},
+		{input: Config{RunCmd: "RunCmd", Lang: "", FileName: "", Template: ""}, expect: createEmptyError("Lang")},
+		{input: Config{RunCmd: "RunCmd", Lang: "Lang", FileName: "", Template: ""}, expect: createEmptyError("FileName")},
+		{input: Config{RunCmd: "RunCmd", Lang: "Lang", FileName: "FileName", Template: ""}, expect: nil},
 	}
 
 	for _, test := range tests {

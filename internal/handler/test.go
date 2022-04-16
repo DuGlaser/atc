@@ -59,16 +59,33 @@ func TestCode(displayID string, verbose bool) {
 	config, err := cc.ReadConfig()
 	cobra.CheckErr(err)
 
-	tmpl, err := template.New("test").Parse(config.Cmd)
+	rcTmpl, err := template.New("runCmd").Parse(config.RunCmd)
 	cobra.CheckErr(err)
 
-	var c bytes.Buffer
-	cobra.CheckErr(tmpl.Execute(&c, map[string]interface{}{
+	var rc bytes.Buffer
+	cobra.CheckErr(rcTmpl.Execute(&rc, map[string]interface{}{
 		"file": task.Path,
 		"dir":  task.Path[0 : len(task.Path)-len(config.FileName)-1],
 	}))
 
-	failures := execTestCase(c.String(), tests, verbose)
+	t := &core.Task{
+		RunCmd: rc.String(),
+	}
+
+	if config.BuildCmd != "" {
+		bcTmpl, err := template.New("buildCmd").Parse(config.BuildCmd)
+		cobra.CheckErr(err)
+
+		var bc bytes.Buffer
+		cobra.CheckErr(bcTmpl.Execute(&bc, map[string]interface{}{
+			"file": task.Path,
+			"dir":  task.Path[0 : len(task.Path)-len(config.FileName)-1],
+		}))
+
+		t.BuildCmd = bc.String()
+	}
+
+	failures := execTestCase(t, tests, verbose)
 	printFailedCase(failures)
 	if len(failures) > 0 {
 		fmt.Println("")
@@ -76,12 +93,8 @@ func TestCode(displayID string, verbose bool) {
 	}
 }
 
-func execTestCase(runCmd string, tests []*core.TestCase, verbose bool) []result {
+func execTestCase(t *core.Task, tests []*core.TestCase, verbose bool) []result {
 	failures := []result{}
-
-	t := core.Task{
-		RunCmd: runCmd,
-	}
 
 	for i, test := range tests {
 		got, err := t.ExecCode(test.In, verbose)

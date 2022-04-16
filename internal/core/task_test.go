@@ -44,7 +44,7 @@ func TestBuildCode(t *testing.T) {
 		output   string
 	}{
 		{
-			task:     Task{RunCmd: "", BuildCmd: "go build ../../test/valid.go"},
+			task:     Task{RunCmd: "", BuildCmd: "go build ../../test/valid.go && rm valid"},
 			hasError: false,
 			output:   "",
 		},

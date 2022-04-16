@@ -50,11 +50,11 @@ var configCmd = &cobra.Command{
 		lang := ls[i]
 
 		cmdPrompt := promptui.Prompt{
-			Label:   "Input cmd",
+			Label:   "Input run command",
 			Default: "g++ -o {{ .dir }}/main {{ .file }} && {{ .dir }}/main",
 		}
 
-		cmd, err := cmdPrompt.Run()
+		runCmd, err := cmdPrompt.Run()
 		cobra.CheckErr(err)
 
 		fileNamePrompt := promptui.Prompt{
@@ -66,7 +66,8 @@ var configCmd = &cobra.Command{
 		cobra.CheckErr(err)
 
 		viper.Set("config.lang", lang.Value)
-		viper.Set("config.cmd", cmd)
+		viper.Set("config.runcmd", runCmd)
+		viper.Set("config.buildcmd", "")
 		viper.Set("config.fileName", fileName)
 		viper.Set("config.template", "")
 

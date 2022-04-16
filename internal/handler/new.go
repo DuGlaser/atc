@@ -56,7 +56,8 @@ func CreateProject(contestID string, verbose bool) {
 	cobra.CheckErr(c.Validate())
 
 	v.Set("config.lang", c.Lang)
-	v.Set("config.cmd", c.Cmd)
+	v.Set("config.runcmd", c.RunCmd)
+	v.Set("config.buildcmd", c.BuildCmd)
 	v.Set("config.filename", c.FileName)
 
 	v.Set("contest.name", contestID)
