@@ -116,7 +116,7 @@ func TestGetProblemIds(t *testing.T) {
 	}
 
 	for i, _ := range ids {
-		id := ids[i].DisplayedID
+		id := ids[i].DisplayID
 
 		if id != expect[i] {
 			t.Errorf("ids has wrong value. got=%v, want=%v.", ids, expect)

@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/DuGlaser/atc/internal/auth"
-	"github.com/DuGlaser/atc/internal/scraper"
+	"github.com/DuGlaser/atc/internal/repository/scraper"
 )
 
 const ATCODER_URL = "https://atcoder.jp/"
@@ -115,9 +115,8 @@ func FetchProblems(contest string) (*http.Response, error) {
 func FetchProblemPage(contest, problem string) (*http.Response, error) {
 	c := strings.ToLower(contest)
 	p := strings.ToLower(problem)
-	id := fmt.Sprintf("%s_%s", strings.ReplaceAll(c, "-", "_"), p)
 
-	req, err := http.NewRequest("GET", GetAtcoderUrl("contests", c, "tasks", id), nil)
+	req, err := http.NewRequest("GET", GetAtcoderUrl("contests", c, "tasks", p), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -129,7 +128,7 @@ func FetchProblemPage(contest, problem string) (*http.Response, error) {
 	client := &http.Client{}
 	res, err := client.Do(req)
 	if res.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("Could not access %s problem.", id)
+		return nil, fmt.Errorf("Could not access %s problem.", p)
 	}
 
 	return res, nil
@@ -200,10 +199,8 @@ func PostProblemAnswer(contest, problem, lang, code string) (*http.Response, err
 		return nil, err
 	}
 
-	c := strings.ReplaceAll(strings.ToLower(contest), "-", "_")
-
 	form := url.Values{}
-	form.Add("data.TaskScreenName", fmt.Sprintf("%s_%s", c, strings.ToLower(problem)))
+	form.Add("data.TaskScreenName", problem)
 	form.Add("data.LanguageId", lang)
 	form.Add("csrf_token", csrf)
 	form.Add("sourceCode", code)

@@ -4,12 +4,14 @@ import (
 	"reflect"
 	"strings"
 	"testing"
+
+	"github.com/DuGlaser/atc/internal/core"
 )
 
 func TestGetProblemSamples(t *testing.T) {
 	tests := []struct {
 		input    string
-		expected []*Sample
+		expected []*core.TestCase
 	}{
 		{input: `
 <div id="task-statement">
@@ -56,31 +58,31 @@ func TestGetProblemSamples(t *testing.T) {
   </span>
 </div>
 `,
-			expected: []*Sample{
-				{In: "123 456 100", Out: "200"},
-				{In: "630 940 314", Out: "-1"},
+			expected: []*core.TestCase{
+				{In: "123 456 100", Expected: "200"},
+				{In: "630 940 314", Expected: "-1"},
 			},
 		},
 	}
 
 	for _, test := range tests {
-		pp, err := NewProblemPage(strings.NewReader(test.input))
+		pp, err := NewTaskPage(strings.NewReader(test.input))
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		sms, err := pp.GetProblemSamples()
+		tc, err := pp.GetTaskTestCases()
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		if len(sms) != len(test.expected) {
-			t.Errorf("sms length is wrong. got=%d, want=%d.", len(sms), len(test.expected))
+		if len(tc) != len(test.expected) {
+			t.Errorf("tc length is wrong. got=%d, want=%d.", len(tc), len(test.expected))
 		}
 
-		for i := range sms {
-			if !reflect.DeepEqual(sms[i], test.expected[i]) {
-				t.Errorf("sms has wrong value. got=%v, want=%v.", sms[i], test.expected[i])
+		for i := range tc {
+			if !reflect.DeepEqual(tc[i], test.expected[i]) {
+				t.Errorf("tc has wrong value. got=%v, want=%v.", tc[i], test.expected[i])
 			}
 		}
 	}

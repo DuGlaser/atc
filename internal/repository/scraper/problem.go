@@ -5,20 +5,21 @@ import (
 	"io"
 	"strings"
 
+	"github.com/DuGlaser/atc/internal/core"
 	"github.com/PuerkitoBio/goquery"
 )
 
-type ProblemPage struct {
+type TaskPage struct {
 	doc *goquery.Document
 }
 
-func NewProblemPage(r io.Reader) (*ProblemPage, error) {
+func NewTaskPage(r io.Reader) (*TaskPage, error) {
 	doc, err := goquery.NewDocumentFromReader(r)
 	if err != nil {
 		return nil, err
 	}
 
-	p := &ProblemPage{
+	p := &TaskPage{
 		doc: doc,
 	}
 
@@ -30,13 +31,13 @@ type Sample struct {
 	Out string
 }
 
-func (cp *ProblemPage) GetProblemSamples() ([]*Sample, error) {
-	sms := []*Sample{}
+func (tp *TaskPage) GetTaskTestCases() ([]*core.TestCase, error) {
+	sms := []*core.TestCase{}
 
 	ins := []string{}
-	outs := []string{}
+	expecteds := []string{}
 
-	cp.doc.Find("div#task-statement div.part").Each(func(i int, s *goquery.Selection) {
+	tp.doc.Find("div#task-statement div.part").Each(func(i int, s *goquery.Selection) {
 		t := s.Find("h3").Text()
 
 		p := s.Find("pre").First().Text()
@@ -47,16 +48,16 @@ func (cp *ProblemPage) GetProblemSamples() ([]*Sample, error) {
 		case strings.Contains(t, "入力例"):
 			ins = append(ins, p)
 		case strings.Contains(t, "出力例"):
-			outs = append(outs, p)
+			expecteds = append(expecteds, p)
 		}
 	})
 
-	if len(ins) != len(outs) {
+	if len(ins) != len(expecteds) {
 		return nil, errors.New("The number of input and output examples is different.")
 	}
 
 	for i := range ins {
-		sms = append(sms, &Sample{In: ins[i], Out: outs[i]})
+		sms = append(sms, &core.TestCase{In: ins[i], Expected: expecteds[i]})
 	}
 
 	return sms, nil

@@ -37,15 +37,36 @@ func (tp *TasksPage) GetProblemIds() []internal.Problem {
 		ls := strings.Split(link, "/")
 
 		// abc001_1
-		problem := ls[len(ls)-1]
-
-		ids := strings.Split(problem, "_")
-		// 1
-		id := strings.ToLower(ids[len(ids)-1])
+		id := ls[len(ls)-1]
 
 		t := strings.ToLower(s.Text())
-		ps = append(ps, internal.Problem{ID: id, DisplayedID: t})
+		ps = append(ps, internal.Problem{ID: id, DisplayID: t})
 	})
 
 	return ps
+}
+
+func (tp *TasksPage) GetProblemId(displayID string) *internal.Problem {
+	var ps internal.Problem
+	tp.doc.Find("table tbody tr td:first-child a").Each(func(i int, s *goquery.Selection) {
+		t := strings.ToLower(s.Text())
+		if t != displayID {
+			return
+		}
+
+		link, exists := s.Attr("href")
+		if !exists {
+			return
+		}
+
+		// /contests/abc001/tasks/abc001_1
+		ls := strings.Split(link, "/")
+
+		// abc001_1
+		id := ls[len(ls)-1]
+
+		ps = internal.Problem{ID: id, DisplayID: t}
+	})
+
+	return &ps
 }

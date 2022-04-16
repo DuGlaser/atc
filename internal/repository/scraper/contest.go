@@ -32,7 +32,7 @@ func (cp *ContestPage) GetProblemIds() []internal.Problem {
 		if s.Text() == "配点" {
 			s.Next().Find("table tbody tr > td:first-child").Each(func(i int, s *goquery.Selection) {
 				t := strings.ToLower(s.Text())
-				ps = append(ps, internal.Problem{ID: t, DisplayedID: t})
+				ps = append(ps, internal.Problem{ID: "", DisplayID: t})
 			})
 		}
 	})
