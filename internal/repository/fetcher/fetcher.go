@@ -84,6 +84,10 @@ func FetchContestPage(contest string) (*http.Response, error) {
 
 	client := &http.Client{}
 	res, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
 	if res.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("Could not access %s contest.", contest)
 	}
@@ -105,6 +109,10 @@ func FetchProblems(contest string) (*http.Response, error) {
 
 	client := &http.Client{}
 	res, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
 	if res.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("Could not access %s problems.", c)
 	}
@@ -127,6 +135,10 @@ func FetchProblemPage(contest, problem string) (*http.Response, error) {
 
 	client := &http.Client{}
 	res, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
 	if res.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("Could not access %s problem.", p)
 	}
