@@ -72,6 +72,10 @@ func (cc *ContestConfig) ReadTaskSetting(displayID string) (*internal.Task, erro
 
 	var task internal.Task
 	err := cc.v.UnmarshalKey(fmt.Sprintf("tasks.%s", displayID), &task)
+	if task.Path == "" && task.ID == "" {
+		return nil, fmt.Errorf("Not found task %s.", displayID)
+	}
+
 	if err != nil {
 		return nil, err
 	}
