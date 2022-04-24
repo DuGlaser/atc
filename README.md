@@ -216,6 +216,43 @@ cacheディレクトリに`atc/session.txt`を削除するコマンドです。
 コンテストの問題のテストケースを実行するコマンドです。
 このコマンドはコンテストディレクトリのみで使用することができます。
 
+## Example
+
+### C++
+
+```toml
+[config]
+  runcmd = "{{ .dir }}/main"
+  buildcmd = "g++ -o {{ .dir }}/main {{ .file }}"
+  filename = "main.cpp"
+  lang = "4003"
+  template = """
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+
+}
+"""
+```
+
+### Go
+
+```toml
+[config]
+  runcmd = "go run {{ .file }}"
+  buildcmd = ""
+  filename = "main.go"
+  lang = "4026"
+  template = """
+package main
+
+func main() {
+
+}
+"""
+```
+
 ## LICENSE
 
 [MIT](https://github.com/DuGlaser/atc/blob/master/LICENSE)
