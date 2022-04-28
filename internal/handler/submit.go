@@ -1,13 +1,11 @@
 package handler
 
 import (
-	"fmt"
 	"io/ioutil"
-	"os/exec"
-	"runtime"
 
 	"github.com/DuGlaser/atc/internal/repository/config"
 	"github.com/DuGlaser/atc/internal/repository/fetcher"
+	"github.com/DuGlaser/atc/internal/util"
 	"github.com/spf13/cobra"
 )
 
@@ -35,25 +33,6 @@ func SubmitCode(displayID string, verbose bool) {
 	_, err = fetcher.PostProblemAnswer(contest.Name, task.ID, config.Lang, string(bytes))
 	cobra.CheckErr(err)
 
-	err = openbrowser(fetcher.GetAtcoderUrl("contests", contest.Name, "submissions", "me"))
+	err = util.Openbrowser(fetcher.GetAtcoderUrl("contests", contest.Name, "submissions", "me"))
 	cobra.CheckErr(err)
-}
-
-// FYI: https://gist.github.com/hyg/9c4afcd91fe24316cbf0
-// Thank you!
-func openbrowser(url string) error {
-	var err error
-
-	switch runtime.GOOS {
-	case "linux":
-		err = exec.Command("xdg-open", url).Start()
-	case "windows":
-		err = exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
-	case "darwin":
-		err = exec.Command("open", url).Start()
-	default:
-		err = fmt.Errorf("unsupported platform")
-	}
-
-	return err
 }
