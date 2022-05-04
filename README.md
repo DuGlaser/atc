@@ -133,6 +133,7 @@ Usage:
   atc [command]
 
 Available Commands:
+  browse      open problem in browse
   completion  Generate the autocompletion script for the specified shell
   config      Create and edit atc config
   help        Help about any command
@@ -151,6 +152,11 @@ Flags:
 
 Use "atc [command] --help" for more information about a command.
 ```
+
+### browse
+
+コンテストの問題をブラウザで開くコマンドです。
+このコマンドはコンテストディレクトリのみで使用することができます。
 
 ### config
 
@@ -250,6 +256,18 @@ package main
 func main() {
 
 }
+"""
+```
+
+### Python
+
+```toml
+[config]
+  runcmd = "python3 {{ .file }}"
+  buildcmd = ""
+  filename = "main.py"
+  lang = "4006"
+  template = """
 """
 ```
 
