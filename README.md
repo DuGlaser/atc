@@ -266,7 +266,7 @@ func main() {
   runcmd = "python3 {{ .file }}"
   buildcmd = ""
   filename = "main.py"
-  lang = "4006"
+  lang = "4047"
   template = """
 """
 ```
