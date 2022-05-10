@@ -7,6 +7,7 @@ import (
 	"io"
 	"os/exec"
 	"strings"
+	"time"
 )
 
 type Task struct {
@@ -15,20 +16,27 @@ type Task struct {
 	alreadyBuild bool
 }
 
-func (t *Task) ExecCode(input string, verbose bool) (string, error) {
+type result struct {
+	Out    string
+	TimeMs int64
+}
+
+func (t *Task) ExecCode(input string, verbose bool) (result, error) {
+	var result result
 	err := t.BuildCode(verbose)
 	if err != nil {
-		return "", err
+		return result, err
 	}
 
 	if verbose {
 		fmt.Println("Run code...")
 	}
 
+	start := time.Now()
 	cmd := exec.Command("sh", "-c", t.RunCmd)
 	pipe, err := cmd.StdinPipe()
 	if err != nil {
-		return "", err
+		return result, err
 	}
 
 	io.WriteString(pipe, input)
@@ -39,13 +47,16 @@ func (t *Task) ExecCode(input string, verbose bool) (string, error) {
 
 	out, err := cmd.Output()
 	if err != nil {
-		return "", errors.New(stderr.String())
+		return result, errors.New(stderr.String())
 	}
 
 	got := strings.TrimSpace(string(out))
 	got = strings.TrimLeft(got, "\n")
 
-	return got, nil
+	result.Out = got
+	result.TimeMs = time.Since(start).Milliseconds()
+
+	return result, nil
 }
 
 func (t *Task) BuildCode(verbose bool) error {

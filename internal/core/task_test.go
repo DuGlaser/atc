@@ -23,16 +23,16 @@ func TestExecCode(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		out, err := test.task.ExecCode("", false)
+		r, err := test.task.ExecCode("", false)
 
 		if test.hasError && test.output != err.Error() {
 			t.Fatalf("The error statement returned by the %s command is invalid. got=%s expect=%s",
 				test.task.RunCmd, err.Error(), test.output)
 		}
 
-		if !test.hasError && out != test.output {
+		if !test.hasError && r.Out != test.output {
 			t.Fatalf("The result of executing the %s command is different. got=%s expect=%s",
-				test.task.RunCmd, out, test.output)
+				test.task.RunCmd, r.Out, test.output)
 		}
 	}
 }

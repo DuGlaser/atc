@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"html/template"
-	"os"
 	"strconv"
 	"strings"
 
@@ -17,13 +16,21 @@ import (
 )
 
 type result struct {
-	id       int
-	in       string
-	expected string
-	got      string
+	ID       int
+	In       string
+	Expected string
+	Got      string
+	Pass     bool
+	TimeMs   int64
 }
 
-func TestCode(displayID string, verbose bool) {
+type TestResults struct {
+	Results   []result
+	MaxTimeMs int64
+	Pass      bool
+}
+
+func TestCode(displayID string, verbose bool) TestResults {
 	cc, err := config.NewContestConfig()
 	cobra.CheckErr(err)
 
@@ -85,47 +92,84 @@ func TestCode(displayID string, verbose bool) {
 		t.BuildCmd = bc.String()
 	}
 
-	failures := execTestCase(t, tests, verbose)
-	printFailedCase(failures)
-	if len(failures) > 0 {
-		fmt.Println("")
-		os.Exit(1)
-	}
-}
-
-func execTestCase(t *core.Task, tests []*core.TestCase, verbose bool) []result {
+	results := execTestCase(t, tests, verbose)
 	failures := []result{}
 
-	for i, test := range tests {
-		got, err := t.ExecCode(test.In, verbose)
-		cobra.CheckErr(err)
+	trs := TestResults{
+		Results:   results,
+		Pass:      true,
+		MaxTimeMs: 0,
+	}
 
-		pass := test.Compare(got)
+	for _, result := range results {
+		if !result.Pass {
+			failures = append(failures, result)
+			trs.Pass = false
+		}
 
-		f := fmt.Sprintf("sample test case %d", i+1)
-		if pass {
-			fmt.Printf("%s ... %s\n", f, color.GreenString("success"))
-		} else {
-			fmt.Printf("%s ... %s\n", f, color.RedString("failed"))
-			failures = append(failures, result{id: i + 1, in: test.In, expected: test.Expected, got: got})
+		if result.TimeMs > trs.MaxTimeMs {
+			trs.MaxTimeMs = result.TimeMs
 		}
 	}
 
-	return failures
+	printFailedCase(failures)
+
+	return trs
+}
+
+func execTestCase(t *core.Task, tests []*core.TestCase, verbose bool) []result {
+	results := []result{}
+
+	for i, test := range tests {
+		r, err := t.ExecCode(test.In, verbose)
+		cobra.CheckErr(err)
+
+		pass := test.Compare(r.Out)
+
+		f := fmt.Sprintf("sample test case %d", i+1)
+
+		time := fmt.Sprintf(" %dms ", r.TimeMs)
+
+		if r.TimeMs >= 1000 {
+			warn := color.New(color.BgRed).SprintFunc()
+			time = warn(time)
+		} else {
+			info := color.New(color.BgBlue).SprintFunc()
+			time = info(time)
+		}
+
+		if pass {
+			fmt.Printf("%s ... %s  %s\n", f, color.GreenString("success"), time)
+		} else {
+			fmt.Printf("%s ... %s   %s\n", f, color.RedString("failed"), time)
+		}
+
+		results = append(results,
+			result{
+				ID:       i + 1,
+				In:       test.In,
+				Expected: test.Expected,
+				Got:      r.Out,
+				Pass:     pass,
+				TimeMs:   r.TimeMs,
+			})
+	}
+
+	return results
 }
 
 func printFailedCase(failures []result) {
 	for _, result := range failures {
 		fmt.Println()
-		color.New(color.Bold).Printf("=== sample test case %d ===\n", result.id)
+		color.New(color.Bold).Printf("=== sample test case %d ===\n", result.ID)
 
 		logs := []struct {
 			label   string
 			content string
 		}{
-			{label: color.CyanString("input: "), content: result.in},
-			{label: color.GreenString("expected: "), content: result.expected},
-			{label: color.RedString("your output: "), content: result.got},
+			{label: color.CyanString("input: "), content: result.In},
+			{label: color.GreenString("expected: "), content: result.Expected},
+			{label: color.RedString("your output: "), content: result.Got},
 		}
 
 		for _, log := range logs {
