@@ -35,7 +35,7 @@ var submitCmd = &cobra.Command{
 func confirm() {
 	fmt.Println()
 	prompt := promptui.Prompt{
-		Label: "Execution time exceeds 1000 ms. Would you like to submit? (yes / no)",
+		Label: "Execution time exceeds 1000ms. Would you like to submit? (yes / no)",
 	}
 	result, err := prompt.Run()
 	cobra.CheckErr(err)
