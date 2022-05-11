@@ -23,13 +23,13 @@ type ContestConfig struct {
 	v       *viper.Viper
 	config  *core.Config
 	contest *Contest
-	task    map[string]Task
+	task    map[string]*Task
 }
 
 func NewContestConfig() (*ContestConfig, error) {
 	cc := &ContestConfig{
 		v:    viper.New(),
-		task: map[string]Task{},
+		task: map[string]*Task{},
 	}
 	err := cc.load()
 	return cc, err
@@ -77,7 +77,7 @@ func (cc *ContestConfig) ReadContestSetting() (*Contest, error) {
 
 func (cc *ContestConfig) ReadTaskSetting(displayID string) (*Task, error) {
 	if task, ok := cc.task[displayID]; ok {
-		return &task, nil
+		return task, nil
 	}
 
 	var task Task
@@ -90,7 +90,7 @@ func (cc *ContestConfig) ReadTaskSetting(displayID string) (*Task, error) {
 		return nil, err
 	}
 
-	cc.task[displayID] = task
+	cc.task[displayID] = &task
 	return &task, nil
 }
 

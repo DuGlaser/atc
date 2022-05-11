@@ -12,7 +12,7 @@ var browseCmd = &cobra.Command{
 	Args:    cobra.MinimumNArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
 		displayID := args[0]
-		handler.OpenTask(displayID)
+		handler.OpenTask(displayID, verbose)
 	},
 }
 

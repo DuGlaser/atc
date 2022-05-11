@@ -11,7 +11,7 @@ import (
 func prepareContestConfig() (*ContestConfig, error) {
 	cc := &ContestConfig{
 		v:    viper.New(),
-		task: map[string]Task{},
+		task: map[string]*Task{},
 	}
 	cc.v.SetConfigType("toml")
 
