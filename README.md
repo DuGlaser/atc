@@ -1,6 +1,6 @@
 # atc
 
-Atcoderのコマンドラインツール。
+atc is a [cargo-atcoder](https://github.com/tanakh/cargo-atcoder) inspired AtCoder command line tool.
 
 ## Feature
 
@@ -13,6 +13,8 @@ Atcoderのコマンドラインツール。
 ```shell
 go install github.com/DuGlaser/atc@latest
 ```
+
+# Inspire me
 
 ## Quick Start
 
