@@ -81,6 +81,10 @@ func (t *Task) BuildCode(verbose bool) error {
 		return errors.New(stderr.String())
 	}
 
+	if verbose {
+		fmt.Println(stderr.String())
+	}
+
 	t.alreadyBuild = true
 
 	return nil
