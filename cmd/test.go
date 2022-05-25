@@ -6,16 +6,26 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/DuGlaser/atc/internal/handler"
+	"github.com/DuGlaser/atc/internal/util"
 )
 
 var testCmd = &cobra.Command{
-	Use:     "test [problem id]",
+	Use:     "test [problem id] [optional: test case numbers]",
 	Short:   "Test answer",
 	Aliases: []string{"t"},
 	Args:    cobra.MinimumNArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		displayID := args[0]
-		trs := handler.TestCode(displayID, verbose)
+		to := handler.TestOption{}
+		to.DisplayID = args[0]
+
+		if len(args) > 1 {
+			is, err := util.ParseIntArguments(args[1:])
+			cobra.CheckErr(err)
+
+			to.EnableCaseIndexes = is
+		}
+
+		trs := handler.TestCode(to, verbose)
 		if !trs.Pass {
 			os.Exit(1)
 		}

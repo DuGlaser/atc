@@ -31,8 +31,8 @@ type Sample struct {
 	Out string
 }
 
-func (tp *TaskPage) GetTaskTestCases() ([]*core.TestCase, error) {
-	sms := []*core.TestCase{}
+func (tp *TaskPage) GetTaskTestCases() ([]core.TestCase, error) {
+	sms := []core.TestCase{}
 
 	ins := []string{}
 	expecteds := []string{}
@@ -57,7 +57,7 @@ func (tp *TaskPage) GetTaskTestCases() ([]*core.TestCase, error) {
 	}
 
 	for i := range ins {
-		sms = append(sms, &core.TestCase{In: ins[i], Expected: expecteds[i]})
+		sms = append(sms, core.TestCase{In: ins[i], Expected: expecteds[i]})
 	}
 
 	return sms, nil

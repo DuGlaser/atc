@@ -30,15 +30,20 @@ type TestResults struct {
 	Pass      bool
 }
 
-func TestCode(displayID string, verbose bool) TestResults {
+type TestOption struct {
+	DisplayID         string
+	EnableCaseIndexes []int
+}
+
+func TestCode(option TestOption, verbose bool) TestResults {
 	cc, err := config.NewContestConfig()
 	cobra.CheckErr(err)
 
-	task, err := cc.ReadTaskSetting(displayID)
+	task, err := cc.ReadTaskSetting(option.DisplayID)
 	cobra.CheckErr(err)
 
 	if task.ID == "" {
-		err := cc.SetTaskID(displayID)
+		err := cc.SetTaskID(option.DisplayID)
 		cobra.CheckErr(err)
 	}
 
@@ -92,6 +97,9 @@ func TestCode(displayID string, verbose bool) TestResults {
 		t.BuildCmd = bc.String()
 	}
 
+	tests, err = filterTestCase(tests, option)
+	cobra.CheckErr(err)
+
 	results := execTestCase(t, tests, verbose)
 	failures := []result{}
 
@@ -117,7 +125,24 @@ func TestCode(displayID string, verbose bool) TestResults {
 	return trs
 }
 
-func execTestCase(t *core.Task, tests []*core.TestCase, verbose bool) []result {
+func filterTestCase(tests []core.TestCase, option TestOption) ([]core.TestCase, error) {
+	if len(option.EnableCaseIndexes) == 0 {
+		return tests, nil
+	}
+
+	filtered := []core.TestCase{}
+	for _, i := range option.EnableCaseIndexes {
+		if i > len(tests) || 0 >= i {
+			return nil, fmt.Errorf("%d-th test does not exist.", i)
+		}
+
+		filtered = append(filtered, tests[i-1])
+	}
+
+	return filtered, nil
+}
+
+func execTestCase(t *core.Task, tests []core.TestCase, verbose bool) []result {
 	results := []result{}
 
 	for i, test := range tests {

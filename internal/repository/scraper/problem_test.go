@@ -11,7 +11,7 @@ import (
 func TestGetProblemSamples(t *testing.T) {
 	tests := []struct {
 		input    string
-		expected []*core.TestCase
+		expected []core.TestCase
 	}{
 		{input: `
 <div id="task-statement">
@@ -58,7 +58,7 @@ func TestGetProblemSamples(t *testing.T) {
   </span>
 </div>
 `,
-			expected: []*core.TestCase{
+			expected: []core.TestCase{
 				{In: "123 456 100", Expected: "200"},
 				{In: "630 940 314", Expected: "-1"},
 			},
