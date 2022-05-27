@@ -59,8 +59,8 @@ func TestGetProblemSamples(t *testing.T) {
 </div>
 `,
 			expected: []core.TestCase{
-				{In: "123 456 100", Expected: "200"},
-				{In: "630 940 314", Expected: "-1"},
+				{ID: 1, In: "123 456 100", Expected: "200"},
+				{ID: 2, In: "630 940 314", Expected: "-1"},
 			},
 		},
 	}

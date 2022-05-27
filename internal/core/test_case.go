@@ -3,6 +3,7 @@ package core
 import "strings"
 
 type TestCase struct {
+	ID       int
 	In       string
 	Expected string
 }

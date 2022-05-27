@@ -57,7 +57,7 @@ func (tp *TaskPage) GetTaskTestCases() ([]core.TestCase, error) {
 	}
 
 	for i := range ins {
-		sms = append(sms, core.TestCase{In: ins[i], Expected: expecteds[i]})
+		sms = append(sms, core.TestCase{In: ins[i], Expected: expecteds[i], ID: i + 1})
 	}
 
 	return sms, nil

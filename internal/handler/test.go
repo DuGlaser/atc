@@ -31,8 +31,8 @@ type TestResults struct {
 }
 
 type TestOption struct {
-	DisplayID         string
-	EnableCaseIndexes []int
+	DisplayID     string
+	EnableCaseIDs []int
 }
 
 func TestCode(option TestOption, verbose bool) TestResults {
@@ -126,12 +126,12 @@ func TestCode(option TestOption, verbose bool) TestResults {
 }
 
 func filterTestCase(tests []core.TestCase, option TestOption) ([]core.TestCase, error) {
-	if len(option.EnableCaseIndexes) == 0 {
+	if len(option.EnableCaseIDs) == 0 {
 		return tests, nil
 	}
 
 	filtered := []core.TestCase{}
-	for _, i := range option.EnableCaseIndexes {
+	for _, i := range option.EnableCaseIDs {
 		if i > len(tests) || 0 >= i {
 			return nil, fmt.Errorf("%d-th test does not exist.", i)
 		}
@@ -171,7 +171,7 @@ func execTestCase(t *core.Task, tests []core.TestCase, verbose bool) []result {
 
 		results = append(results,
 			result{
-				ID:       i + 1,
+				ID:       test.ID,
 				In:       test.In,
 				Expected: test.Expected,
 				Got:      r.Out,

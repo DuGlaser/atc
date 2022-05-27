@@ -22,7 +22,7 @@ var testCmd = &cobra.Command{
 			is, err := util.ParseIntArguments(args[1:])
 			cobra.CheckErr(err)
 
-			to.EnableCaseIndexes = is
+			to.EnableCaseIDs = is
 		}
 
 		trs := handler.TestCode(to, verbose)
