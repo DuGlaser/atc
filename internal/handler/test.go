@@ -145,13 +145,13 @@ func filterTestCase(tests []core.TestCase, option TestOption) ([]core.TestCase, 
 func execTestCase(t *core.Task, tests []core.TestCase, verbose bool) []result {
 	results := []result{}
 
-	for i, test := range tests {
+	for _, test := range tests {
 		r, err := t.ExecCode(test.In, verbose)
 		cobra.CheckErr(err)
 
 		pass := test.Compare(r.Out)
 
-		f := fmt.Sprintf("sample test case %d", i+1)
+		f := fmt.Sprintf("sample test case %d", test.ID)
 
 		time := fmt.Sprintf(" %dms ", r.TimeMs)
 
