@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"os"
 	"os/exec"
 	"strings"
 	"time"
@@ -19,6 +20,43 @@ type Task struct {
 type result struct {
 	Out    string
 	TimeMs int64
+}
+
+func (t *Task) ExecHandleCode(verbose bool) (result, error) {
+
+	var result result
+	err := t.BuildCode(verbose)
+	if err != nil {
+		return result, err
+	}
+
+	if verbose {
+		fmt.Println("Run code...")
+	}
+
+	start := time.Now()
+	cmd := exec.Command("sh", "-c", t.RunCmd)
+	cmd.Stdin = os.Stdin
+
+	if err != nil {
+		return result, err
+	}
+
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
+
+	out, err := cmd.Output()
+	if err != nil {
+		return result, errors.New(stderr.String())
+	}
+
+	got := strings.TrimSpace(string(out))
+	got = strings.TrimLeft(got, "\n")
+
+	result.Out = got
+	result.TimeMs = time.Since(start).Milliseconds()
+
+	return result, nil
 }
 
 func (t *Task) ExecCode(input string, verbose bool) (result, error) {
