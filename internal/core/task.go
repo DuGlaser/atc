@@ -25,9 +25,13 @@ type result struct {
 func (t *Task) ExecHandleCode(verbose bool) (result, error) {
 
 	var result result
-	err := t.BuildCode(verbose)
-	if err != nil {
-		return result, err
+	if !t.alreadyBuild {
+		err := t.BuildCode(verbose)
+		if err != nil {
+			return result, err
+		}
+
+		fmt.Println("Ready to go!!")
 	}
 
 	if verbose {
@@ -37,10 +41,6 @@ func (t *Task) ExecHandleCode(verbose bool) (result, error) {
 	start := time.Now()
 	cmd := exec.Command("sh", "-c", t.RunCmd)
 	cmd.Stdin = os.Stdin
-
-	if err != nil {
-		return result, err
-	}
 
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
@@ -99,6 +99,7 @@ func (t *Task) ExecCode(input string, verbose bool) (result, error) {
 
 func (t *Task) BuildCode(verbose bool) error {
 	if t.BuildCmd == "" {
+		t.alreadyBuild = true
 		return nil
 	}
 

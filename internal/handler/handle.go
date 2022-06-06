@@ -56,7 +56,7 @@ func HaldleExec(displayID string, verbose bool) {
 			label   string
 			content string
 		}{
-			{label: color.RedString("your output: "), content: result.Out},
+			{label: color.CyanString("your output: "), content: result.Out},
 		}
 
 		for _, log := range logs {
