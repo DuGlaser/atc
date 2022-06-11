@@ -14,8 +14,6 @@ atc is a [cargo-atcoder](https://github.com/tanakh/cargo-atcoder) inspired AtCod
 go install github.com/DuGlaser/atc@latest
 ```
 
-# Inspire me
-
 ## Quick Start
 
 ### 1. Atcoderにログインする
