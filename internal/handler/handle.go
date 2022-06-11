@@ -1,9 +1,7 @@
 package handler
 
 import (
-	"bytes"
 	"fmt"
-	"html/template"
 
 	"github.com/DuGlaser/atc/internal/core"
 	"github.com/DuGlaser/atc/internal/repository/config"
@@ -21,30 +19,11 @@ func HaldleExec(displayID string, verbose bool) {
 	config, err := cc.ReadConfig()
 	cobra.CheckErr(err)
 
-	rcTmpl, err := template.New("runCmd").Parse(config.RunCmd)
-	cobra.CheckErr(err)
-
-	var rc bytes.Buffer
-	cobra.CheckErr(rcTmpl.Execute(&rc, map[string]interface{}{
-		"file": task.Path,
-		"dir":  task.Path[0 : len(task.Path)-len(config.FileName)-1],
-	}))
+	cobra.CheckErr(config.GenerateCmd(task.Path, config.FileName))
 
 	t := &core.Task{
-		RunCmd: rc.String(),
-	}
-
-	if config.BuildCmd != "" {
-		bcTmpl, err := template.New("buildCmd").Parse(config.BuildCmd)
-		cobra.CheckErr(err)
-
-		var bc bytes.Buffer
-		cobra.CheckErr(bcTmpl.Execute(&bc, map[string]interface{}{
-			"file": task.Path,
-			"dir":  task.Path[0 : len(task.Path)-len(config.FileName)-1],
-		}))
-
-		t.BuildCmd = bc.String()
+		RunCmd:   config.RunCmd,
+		BuildCmd: config.BuildCmd,
 	}
 
 	for {
