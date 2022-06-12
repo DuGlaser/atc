@@ -174,6 +174,34 @@ func FetchHomePage() (*http.Response, error) {
 	return client.Do(req)
 }
 
+func FetchSubmissionsMe(contest string) (*http.Response, error) {
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", GetAtcoderUrl("contests", contest, "submissions", "me"), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := SetCookie(req); err != nil {
+		return nil, err
+	}
+
+	return client.Do(req)
+}
+
+func FetchSubmissionDetail(contest, submissionID string) (*http.Response, error) {
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", GetAtcoderUrl("contests", contest, "submissions", submissionID), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := SetCookie(req); err != nil {
+		return nil, err
+	}
+
+	return client.Do(req)
+}
+
 func PostProblemAnswer(contest, problem, lang, code string) (*http.Response, error) {
 	jar, err := cookiejar.New(nil)
 	if err != nil {
