@@ -43,9 +43,6 @@ func SubmitCode(displayID string, verbose bool) {
 	fmt.Println()
 	sm := watchSubmissionStatus(contest.Name)
 
-	// NOTE: 提出結果の詳細をを取れるように遅延を入れる
-	time.Sleep(1 * time.Second)
-
 	res, err := fetcher.FetchSubmissionDetail(contest.Name, sm.ID)
 	cobra.CheckErr(err)
 
