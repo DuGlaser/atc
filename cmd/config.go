@@ -33,8 +33,10 @@ var configCmd = &cobra.Command{
 		}
 
 		templates := &promptui.SelectTemplates{
+			Label:    "{{ . }}:",
 			Active:   fmt.Sprintf("%s {{ .Name | cyan | underline }}", promptui.IconSelect),
 			Inactive: "  {{ .Name }}",
+			Selected: `{{ "Select language:" | faint}} {{ .Name }}`,
 		}
 
 		langPrompt := promptui.Select{
