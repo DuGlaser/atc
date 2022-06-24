@@ -6,6 +6,7 @@ package cmd
 
 import (
 	"os"
+	"runtime/debug"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -13,11 +14,14 @@ import (
 
 var cfgFile string
 var verbose bool
+var version string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "atc",
 	Short: "Atcoder command line tool",
+	// The number of version is set dynamically later.
+	Version: "v0.0.0",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -29,11 +33,19 @@ func Execute() {
 	}
 }
 
+func setVersion() {
+	if info, ok := debug.ReadBuildInfo(); ok {
+		version = info.Main.Version
+	}
+}
+
 func init() {
+	setVersion()
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/.atc.toml)")
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "Make the operation more talkative")
+	rootCmd.SetVersionTemplate(version)
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
