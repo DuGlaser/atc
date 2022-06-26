@@ -5,7 +5,6 @@ import (
 	"io"
 	"strings"
 
-	"github.com/DuGlaser/atc/internal"
 	"github.com/PuerkitoBio/goquery"
 )
 
@@ -26,13 +25,20 @@ func NewContestPage(r io.Reader) (*ContestPage, error) {
 	return s, nil
 }
 
-func (cp *ContestPage) GetProblemIds() []internal.Problem {
-	ps := []internal.Problem{}
+type Problem struct {
+	// URLに使われる、コンテスト内の問題を一意に識別するID
+	ID string
+	// 問題ページで表示される一意なID
+	DisplayID string
+}
+
+func (cp *ContestPage) GetProblemIds() []Problem {
+	ps := []Problem{}
 	cp.doc.Find("div#contest-statement h3").Each(func(i int, s *goquery.Selection) {
 		if s.Text() == "配点" {
 			s.Next().Find("table tbody tr > td:first-child").Each(func(i int, s *goquery.Selection) {
 				t := strings.ToLower(s.Text())
-				ps = append(ps, internal.Problem{ID: "", DisplayID: t})
+				ps = append(ps, Problem{ID: "", DisplayID: t})
 			})
 		}
 	})

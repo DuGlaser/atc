@@ -4,7 +4,6 @@ import (
 	"io"
 	"strings"
 
-	"github.com/DuGlaser/atc/internal"
 	"github.com/PuerkitoBio/goquery"
 )
 
@@ -25,8 +24,8 @@ func NewTasksPage(r io.Reader) (*TasksPage, error) {
 	return t, nil
 }
 
-func (tp *TasksPage) GetProblemIds() []internal.Problem {
-	ps := []internal.Problem{}
+func (tp *TasksPage) GetProblemIds() []Problem {
+	ps := []Problem{}
 	tp.doc.Find("table tbody tr td:first-child a").Each(func(i int, s *goquery.Selection) {
 		link, exists := s.Attr("href")
 		if !exists {
@@ -40,14 +39,14 @@ func (tp *TasksPage) GetProblemIds() []internal.Problem {
 		id := ls[len(ls)-1]
 
 		t := strings.ToLower(s.Text())
-		ps = append(ps, internal.Problem{ID: id, DisplayID: t})
+		ps = append(ps, Problem{ID: id, DisplayID: t})
 	})
 
 	return ps
 }
 
-func (tp *TasksPage) GetProblemId(displayID string) *internal.Problem {
-	var ps internal.Problem
+func (tp *TasksPage) GetProblemId(displayID string) *Problem {
+	var ps Problem
 	tp.doc.Find("table tbody tr td:first-child a").Each(func(i int, s *goquery.Selection) {
 		t := strings.ToLower(s.Text())
 		if t != displayID {
@@ -65,7 +64,7 @@ func (tp *TasksPage) GetProblemId(displayID string) *internal.Problem {
 		// abc001_1
 		id := ls[len(ls)-1]
 
-		ps = internal.Problem{ID: id, DisplayID: t}
+		ps = Problem{ID: id, DisplayID: t}
 	})
 
 	return &ps
