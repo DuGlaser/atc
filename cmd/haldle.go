@@ -8,7 +8,7 @@ import (
 
 var handleCmd = &cobra.Command{
 	Use:     "handle [problem id]",
-	Short:   "manual execution code",
+	Short:   "Manual execution code",
 	Aliases: []string{"h"},
 	Args:    cobra.MinimumNArgs(1),
 	Run: func(_ *cobra.Command, args []string) {

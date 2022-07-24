@@ -9,8 +9,8 @@ import (
 
 var logoutCmd = &cobra.Command{
 	Use:   "logout",
-	Short: "Logout to atcoder",
-	Long:  "Logout to atcoder and save the session cookie locally.",
+	Short: "Logout to AtCoder",
+	Long:  "Delete local session cookie and logout of AtCoder.",
 	Run: func(cmd *cobra.Command, args []string) {
 		cobra.CheckErr(auth.ClearSession())
 		fmt.Println("Success!")

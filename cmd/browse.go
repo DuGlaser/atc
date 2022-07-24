@@ -7,7 +7,7 @@ import (
 
 var browseCmd = &cobra.Command{
 	Use:     "browse [problem id]",
-	Short:   "open problem in browse",
+	Short:   "Open problem in browse",
 	Aliases: []string{"b"},
 	Args:    cobra.MinimumNArgs(1),
 	Run: func(_ *cobra.Command, args []string) {

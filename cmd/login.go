@@ -40,8 +40,8 @@ func (p *prompt) input() error {
 
 var loginCmd = &cobra.Command{
 	Use:   "login",
-	Short: "Login to atcoder",
-	Long:  "Login to atcoder and save the session cookie locally.",
+	Short: "Login to AtCoder",
+	Long:  "Login to AtCoder and save the session cookie locally.",
 	Run: func(cmd *cobra.Command, args []string) {
 		if _, err := auth.GetSession(); err == nil {
 			fmt.Println("Already logged in.")
