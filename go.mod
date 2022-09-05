@@ -8,7 +8,7 @@ require (
 	github.com/fatih/color v1.13.0
 	github.com/k0kubun/go-ansi v0.0.0-20180517002512-3bf9e2903213
 	github.com/manifoldco/promptui v0.9.0
-	github.com/schollz/progressbar/v3 v3.10.0
+	github.com/schollz/progressbar/v3 v3.10.1
 	github.com/spf13/cobra v1.5.0
 	github.com/spf13/viper v1.12.0
 	golang.org/x/term v0.0.0-20220722155259-a9ba230a4035
