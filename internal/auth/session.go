@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 const DIR = "atc"
@@ -69,6 +70,38 @@ func StoreSession(byte []byte) error {
 	}
 
 	return nil
+}
+
+func IsExpired() (bool, error) {
+	session, err := GetSession()
+	if err != nil {
+		return false, err
+	}
+
+	sv := strings.Split(session, "; ")
+	for _, v := range sv {
+		kv := strings.Split(v, "=")
+		if len(kv) < 2 {
+			continue
+		}
+
+		key := kv[0]
+		if key != "Expires" {
+			continue
+		}
+
+		value := kv[1]
+		expiredDate, err := time.Parse(time.RFC1123, value)
+		if err != nil {
+			return false, err
+		}
+
+		if time.Now().After(expiredDate) {
+			return true, nil
+		}
+	}
+
+	return false, err
 }
 
 func ClearSession() error {
