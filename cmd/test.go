@@ -14,6 +14,7 @@ var testCmd = &cobra.Command{
 	Short:   "Test answer",
 	Aliases: []string{"t"},
 	Args:    cobra.MinimumNArgs(1),
+	PreRun:  func(cmd *cobra.Command, args []string) { handler.CheckLogin() },
 	Run: func(_ *cobra.Command, args []string) {
 		to := handler.TestOption{}
 		to.DisplayID = args[0]

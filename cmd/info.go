@@ -3,14 +3,16 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/DuGlaser/atc/internal/handler"
 	"github.com/DuGlaser/atc/internal/repository/fetcher"
 	"github.com/DuGlaser/atc/internal/repository/scraper"
 	"github.com/spf13/cobra"
 )
 
 var infoCmd = &cobra.Command{
-	Use:   "info",
-	Short: "Output the information of logged in users",
+	Use:    "info",
+	Short:  "Output the information of logged in users",
+	PreRun: func(cmd *cobra.Command, args []string) { handler.CheckLogin() },
 	Run: func(cmd *cobra.Command, args []string) {
 		res, err := fetcher.FetchHomePage()
 		cobra.CheckErr(err)

@@ -11,6 +11,7 @@ var newCmd = &cobra.Command{
 	Short:   "Create contest project",
 	Aliases: []string{"n"},
 	Args:    cobra.MinimumNArgs(1),
+	PreRun:  func(cmd *cobra.Command, args []string) { handler.CheckLogin() },
 	Run: func(cmd *cobra.Command, args []string) {
 		cobra.CheckErr(viper.ReadInConfig())
 		contest := args[0]

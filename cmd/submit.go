@@ -16,6 +16,7 @@ var submitCmd = &cobra.Command{
 	Short:   "Submit answer",
 	Aliases: []string{"s"},
 	Args:    cobra.MinimumNArgs(1),
+	PreRun:  func(cmd *cobra.Command, args []string) { handler.CheckLogin() },
 	Run: func(cmd *cobra.Command, args []string) {
 		displayID := args[0]
 		if !skipTests {
