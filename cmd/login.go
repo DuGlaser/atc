@@ -43,7 +43,8 @@ var loginCmd = &cobra.Command{
 	Short: "Login to AtCoder",
 	Long:  "Login to AtCoder and save the session cookie locally.",
 	Run: func(cmd *cobra.Command, args []string) {
-		if expired, _ := auth.IsExpired(); !expired {
+		if expired, err := auth.IsExpired(); !expired {
+			cobra.CheckErr(err)
 			fmt.Println("Already logged in.")
 			os.Exit(0)
 		}
