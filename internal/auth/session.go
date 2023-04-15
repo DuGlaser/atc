@@ -75,7 +75,7 @@ func StoreSession(byte []byte) error {
 func IsExpired() (bool, error) {
 	session, err := GetSession()
 	if err != nil {
-		return false, err
+		return true, err
 	}
 
 	sv := strings.Split(session, "; ")
@@ -93,7 +93,7 @@ func IsExpired() (bool, error) {
 		value := kv[1]
 		expiredDate, err := time.Parse(time.RFC1123, value)
 		if err != nil {
-			return false, err
+			return true, err
 		}
 
 		if time.Now().After(expiredDate) {
