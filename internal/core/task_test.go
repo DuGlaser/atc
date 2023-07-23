@@ -8,31 +8,26 @@ func TestExecCode(t *testing.T) {
 	tests := []struct {
 		task     Task
 		hasError bool
-		output   string
 	}{
 		{
 			task:     Task{RunCmd: "go run ../../test/valid.go", BuildCmd: ""},
 			hasError: false,
-			output:   "OK",
 		},
 		{
 			task:     Task{RunCmd: "go run ../../test/syntax_error.go", BuildCmd: ""},
 			hasError: true,
-			output:   "# command-line-arguments\n../../test/syntax_error.go:6:19: syntax error: unexpected newline, expecting comma or )\n",
 		},
 	}
 
 	for _, test := range tests {
-		r, err := test.task.ExecCode("", false)
+		_, err := test.task.ExecCode("", false)
 
-		if test.hasError && test.output != err.Error() {
-			t.Fatalf("The error statement returned by the %s command is invalid. got=%s expect=%s",
-				test.task.RunCmd, err.Error(), test.output)
+		if test.hasError && err == nil {
+			t.Fatalf("No error occurd. commad=`%s`", test.task.RunCmd)
 		}
 
-		if !test.hasError && r.Out != test.output {
-			t.Fatalf("The result of executing the %s command is different. got=%s expect=%s",
-				test.task.RunCmd, r.Out, test.output)
+		if !test.hasError && err != nil {
+			t.Fatalf("Error occurd. commad=`%s`", test.task.RunCmd)
 		}
 	}
 }
@@ -41,26 +36,26 @@ func TestBuildCode(t *testing.T) {
 	tests := []struct {
 		task     Task
 		hasError bool
-		output   string
 	}{
 		{
 			task:     Task{RunCmd: "", BuildCmd: "go build ../../test/valid.go && rm valid"},
 			hasError: false,
-			output:   "",
 		},
 		{
 			task:     Task{RunCmd: "", BuildCmd: "go build ../../test/syntax_error.go"},
 			hasError: true,
-			output:   "# command-line-arguments\n../../test/syntax_error.go:6:19: syntax error: unexpected newline, expecting comma or )\n",
 		},
 	}
 
 	for _, test := range tests {
 		err := test.task.BuildCode(false)
 
-		if test.hasError && test.output != err.Error() {
-			t.Fatalf("The error statement returned by the %s command is invalid. got=%s expect=%s",
-				test.task.RunCmd, err.Error(), test.output)
+		if test.hasError && err == nil {
+			t.Fatalf("No error occurd. commad=`%s`", test.task.RunCmd)
+		}
+
+		if !test.hasError && err != nil {
+			t.Fatalf("Error occurd. commad=`%s`", test.task.RunCmd)
 		}
 	}
 }

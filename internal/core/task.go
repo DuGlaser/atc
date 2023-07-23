@@ -72,6 +72,13 @@ func (t *Task) ExecCode(input string, verbose bool) (result, error) {
 
 	start := time.Now()
 	cmd := exec.Command("sh", "-c", t.RunCmd)
+
+	var out bytes.Buffer
+	var stderr bytes.Buffer
+
+	cmd.Stdout = &out
+	cmd.Stderr = &stderr
+
 	pipe, err := cmd.StdinPipe()
 	if err != nil {
 		return result, err
@@ -80,19 +87,17 @@ func (t *Task) ExecCode(input string, verbose bool) (result, error) {
 	io.WriteString(pipe, input)
 	pipe.Close()
 
-	var stderr bytes.Buffer
-	cmd.Stderr = &stderr
+	err = cmd.Run()
 
-	out, err := cmd.Output()
-	if err != nil {
-		return result, errors.New(stderr.String())
-	}
-
-	got := strings.TrimSpace(string(out))
+	got := strings.TrimSpace(out.String())
 	got = strings.TrimLeft(got, "\n")
 
 	result.Out = got
 	result.TimeMs = time.Since(start).Milliseconds()
+
+	if err != nil {
+		return result, errors.New(stderr.String())
+	}
 
 	return result, nil
 }
