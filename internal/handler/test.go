@@ -20,6 +20,7 @@ type result struct {
 	Got      string
 	Pass     bool
 	TimeMs   int64
+	Err      error
 }
 
 type TestResults struct {
@@ -126,7 +127,6 @@ func execTestCase(t *core.Task, tests []core.TestCase, verbose bool) []result {
 
 	for _, test := range tests {
 		r, err := t.ExecCode(test.In, verbose)
-		cobra.CheckErr(err)
 
 		pass := test.Compare(r.Out)
 
@@ -156,6 +156,7 @@ func execTestCase(t *core.Task, tests []core.TestCase, verbose bool) []result {
 				Got:      r.Out,
 				Pass:     pass,
 				TimeMs:   r.TimeMs,
+				Err:      err,
 			})
 	}
 
@@ -180,6 +181,11 @@ func printFailedCase(failures []result) {
 			fmt.Println()
 			fmt.Println(log.label)
 			printResultValue(log.content)
+		}
+
+		if result.Err != nil {
+			fmt.Println()
+			fmt.Printf("%s %s\n", color.HiRedString("Error:"), result.Err)
 		}
 	}
 }
