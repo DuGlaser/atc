@@ -6,8 +6,11 @@ import (
 	"path"
 
 	"github.com/DuGlaser/atc/internal/core"
+	"github.com/DuGlaser/atc/internal/repository/config"
 	"github.com/DuGlaser/atc/internal/repository/fetcher"
 	"github.com/DuGlaser/atc/internal/repository/scraper"
+	"github.com/DuGlaser/atc/internal/ui"
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -46,22 +49,44 @@ func CreateProject(contestID string, verbose bool) {
 		cobra.CheckErr(fmt.Sprintf("%s directory is already exists.\n", contestID))
 	}
 
-	err = os.Mkdir(path.Join(wd, contestID), 0754)
-	cobra.CheckErr(err)
-
 	v := viper.New()
 
 	var c core.Config
 	cobra.CheckErr(viper.UnmarshalKey("config", &c))
 	cobra.CheckErr(c.Validate())
 
-	v.Set("config.lang", c.Lang)
+	startAt, err := cp.GetStartAt()
+	cobra.CheckErr(err)
+
+	ls, err := config.GetCurrentVersionLangList(startAt)
+	cobra.CheckErr(err)
+
+	match := false
+	for _, l := range ls {
+		if l.ID == c.Lang {
+			v.Set("config.lang", c.Lang)
+			match = true
+			break
+		}
+	}
+
+	if !match {
+		fmt.Println(color.RedString("The language described in `.atc.toml` is not supported in this contest. Please choose the language you would like to use for this contest."))
+
+		lang, err := ui.SelectLanguage(ls)
+		cobra.CheckErr(err)
+		v.Set("config.lang", lang)
+	}
+
 	v.Set("config.runcmd", c.RunCmd)
 	v.Set("config.buildcmd", c.BuildCmd)
 	v.Set("config.filename", c.FileName)
 
 	v.Set("contest.name", contestID)
 	v.Set("contest.url", fetcher.GetAtcoderUrl("contests", contestID))
+
+	err = os.Mkdir(path.Join(wd, contestID), 0754)
+	cobra.CheckErr(err)
 
 	for _, id := range ids {
 		key := fmt.Sprintf("tasks.%s", id.DisplayID)
