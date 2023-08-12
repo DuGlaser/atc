@@ -4,6 +4,7 @@ import (
 	"errors"
 	"io"
 
+	"github.com/DuGlaser/atc/internal/core"
 	"github.com/PuerkitoBio/goquery"
 )
 
@@ -38,19 +39,19 @@ type Language struct {
 	Name  string
 }
 
-func (sp *SubmitPage) GetLanguageIds() []*Language {
-	ls := []*Language{}
+func (sp *SubmitPage) GetLanguageIds() []core.Language {
+	ls := []core.Language{}
 
 	sp.doc.Find("div#select-lang > div:first-child > select > option").Each(func(i int, s *goquery.Selection) {
-		value, exists := s.Attr("value")
+		id, exists := s.Attr("value")
 		if !exists {
 			return
 		}
 
 		name := s.Text()
-		ls = append(ls, &Language{
-			Value: value,
-			Name:  name,
+		ls = append(ls, core.Language{
+			ID:   id,
+			Name: name,
 		})
 	})
 

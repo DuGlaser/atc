@@ -1,8 +1,13 @@
 package config
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/fs"
+	"sort"
+	"time"
 
+	"github.com/DuGlaser/atc/assets"
 	"github.com/DuGlaser/atc/internal/core"
 	"github.com/DuGlaser/atc/internal/repository/fetcher"
 	"github.com/DuGlaser/atc/internal/repository/scraper"
@@ -129,4 +134,54 @@ func (cc *ContestConfig) SetTaskID(displayID string) error {
 	task.ID = p.ID
 
 	return nil
+}
+
+func GetCurrentVersionLangList(targetTime time.Time) ([]core.Language, error) {
+	validPaths := make([]string, 0)
+
+	err := fs.WalkDir(assets.AtCoderAssets, ".", func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if d.IsDir() {
+			return nil
+		}
+
+		timestamp, err := time.Parse("200601021504", d.Name()[:12])
+		if err != nil {
+			return err
+		}
+
+		if timestamp.Before(targetTime) || timestamp.Equal(targetTime) {
+			validPaths = append(validPaths, path)
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	if len(validPaths) == 0 {
+		return nil, err
+	}
+
+	sort.Strings(validPaths)
+
+	last := validPaths[len(validPaths)-1]
+
+	data, err := fs.ReadFile(assets.AtCoderAssets, last)
+	if err != nil {
+		return nil, err
+	}
+
+	var l []core.Language
+	err = json.Unmarshal(data, &l)
+	if err != nil {
+		return nil, err
+	}
+
+	return l, nil
 }
