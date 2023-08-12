@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"strings"
 
 	"github.com/DuGlaser/atc/internal/core"
 	"github.com/DuGlaser/atc/internal/repository/config"
@@ -75,15 +76,15 @@ func CreateProject(contestID string, verbose bool) {
 
 		lang, err := ui.SelectLanguage(ls)
 		cobra.CheckErr(err)
-		v.Set("config.lang", lang)
+		v.Set("config.lang", lang.ID)
 	}
 
 	v.Set("config.runcmd", c.RunCmd)
 	v.Set("config.buildcmd", c.BuildCmd)
 	v.Set("config.filename", c.FileName)
 
-	v.Set("contest.name", contestID)
-	v.Set("contest.url", fetcher.GetAtcoderUrl("contests", contestID))
+	v.Set("contest.name", strings.ToLower(contestID))
+	v.Set("contest.url", fetcher.GetAtcoderUrl("contests", strings.ToLower(contestID)))
 
 	err = os.Mkdir(path.Join(wd, contestID), 0754)
 	cobra.CheckErr(err)
