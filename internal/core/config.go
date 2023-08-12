@@ -7,6 +7,11 @@ import (
 	"reflect"
 )
 
+type Language struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}
+
 type Config struct {
 	RunCmd   string
 	BuildCmd string

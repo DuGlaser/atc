@@ -3,7 +3,9 @@ package scraper
 import (
 	"errors"
 	"io"
+	"net/url"
 	"strings"
+	"time"
 
 	"github.com/PuerkitoBio/goquery"
 )
@@ -44,6 +46,21 @@ func (cp *ContestPage) GetProblemIds() []Problem {
 	})
 
 	return ps
+}
+
+func (cp *ContestPage) GetStartAt() (time.Time, error) {
+	u, ok := cp.doc.Find(".contest-duration a").First().Attr("href")
+	if !ok {
+		return time.Time{}, errors.New("target url is not found")
+	}
+
+	parsed, err := url.Parse(u)
+	if err != nil {
+		return time.Time{}, errors.New("start time is not found")
+	}
+
+	t := parsed.Query().Get("iso")
+	return time.Parse("20060102T1504", t)
 }
 
 func (cp *ContestPage) GetCSRFToken() (string, error) {

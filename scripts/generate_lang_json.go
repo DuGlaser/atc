@@ -5,17 +5,12 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/DuGlaser/atc/internal/core"
 	"github.com/DuGlaser/atc/internal/repository/fetcher"
 	"github.com/DuGlaser/atc/internal/repository/scraper"
 )
 
-type Language struct {
-	Id   string `json:"id"`
-	Name string `json:"name"`
-}
-
 func main() {
-
 	numArgs := len(os.Args)
 
 	if numArgs <= 1 {
@@ -38,11 +33,11 @@ func main() {
 
 	_ls := sp.GetLanguageIds()
 
-	ls := make([]Language, len(_ls))
+	ls := make([]core.Language, len(_ls))
 
 	for i, l := range _ls {
-		ls[i] = Language{
-			Id:   l.Value,
+		ls[i] = core.Language{
+			ID:   l.ID,
 			Name: l.Name,
 		}
 	}
