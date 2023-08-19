@@ -32,12 +32,26 @@ var client = &http.Client{
 }
 
 func requestHandler(req *http.Request) (*http.Response, error) {
-	if err := SetCookie(req); err != nil {
+	if err := setCookie(req); err != nil {
 		return nil, err
 	}
 
 	res, err := client.Do(req)
 	return res, err
+}
+
+func setCookie(req *http.Request) error {
+	session, err := auth.GetSession()
+	if err != nil {
+		return err
+	}
+
+	req.Header.Add("Cookie", session)
+	return nil
+}
+
+func is2xx(res *http.Response) bool {
+	return res.StatusCode >= http.StatusOK && res.StatusCode < http.StatusMultipleChoices
 }
 
 func GetAtcoderUrl(p ...string) string {
@@ -51,16 +65,6 @@ func GetAtcoderUrl(p ...string) string {
 
 	u.Path = path.Join(ps...)
 	return u.String() + "?lang=ja"
-}
-
-func SetCookie(req *http.Request) error {
-	session, err := auth.GetSession()
-	if err != nil {
-		return err
-	}
-
-	req.Header.Add("Cookie", session)
-	return nil
 }
 
 func FetchAuthSession(username, password string) (*http.Response, error) {
@@ -111,7 +115,7 @@ func FetchContestPage(contest string) (*http.Response, error) {
 		return nil, err
 	}
 
-	if res.StatusCode != http.StatusOK {
+	if !is2xx(res) {
 		return nil, fmt.Errorf("Could not access %s contest.", contest)
 	}
 
@@ -131,7 +135,7 @@ func FetchProblems(contest string) (*http.Response, error) {
 		return nil, err
 	}
 
-	if res.StatusCode != http.StatusOK {
+	if !is2xx(res) {
 		return nil, fmt.Errorf("Could not access %s problems.", c)
 	}
 
@@ -152,7 +156,7 @@ func FetchProblemPage(contest, problem string) (*http.Response, error) {
 		return nil, err
 	}
 
-	if res.StatusCode != http.StatusOK {
+	if !is2xx(res) {
 		return nil, fmt.Errorf("Could not access %s problem.", p)
 	}
 
