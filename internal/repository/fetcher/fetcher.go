@@ -16,28 +16,17 @@ import (
 
 const ATCODER_URL = "https://atcoder.jp/"
 
-var transport = &http.Transport{
-	DialContext: (&net.Dialer{
-		Timeout:   30 * time.Second,
-		KeepAlive: 30 * time.Second,
-	}).DialContext,
-	TLSHandshakeTimeout: 10 * time.Second,
-}
+func getDefaultClient() *http.Client {
+	return &http.Client{
+		Transport: &http.Transport{
+			DialContext: (&net.Dialer{
+				Timeout:   30 * time.Second,
+				KeepAlive: 30 * time.Second,
+			}).DialContext,
+			TLSHandshakeTimeout: 10 * time.Second,
+		},
+		Timeout: 30 * time.Second}
 
-var timeout = 30 * time.Second
-
-var client = &http.Client{
-	Transport: transport,
-	Timeout:   timeout,
-}
-
-func requestHandler(req *http.Request) (*http.Response, error) {
-	if err := setCookie(req); err != nil {
-		return nil, err
-	}
-
-	res, err := client.Do(req)
-	return res, err
 }
 
 func setCookie(req *http.Request) error {
@@ -73,11 +62,8 @@ func FetchAuthSession(username, password string) (*http.Response, error) {
 		return nil, err
 	}
 
-	client := &http.Client{
-		Transport: transport,
-		Timeout:   timeout,
-		Jar:       jar,
-	}
+	client := getDefaultClient()
+	client.Jar = jar
 
 	loginUrl := GetAtcoderUrl("/login")
 	res, err := client.Get(loginUrl)
@@ -110,7 +96,11 @@ func FetchContestPage(contest string) (*http.Response, error) {
 		return nil, err
 	}
 
-	res, err := requestHandler(req)
+	if err := setCookie(req); err != nil {
+		return nil, err
+	}
+
+	res, err := getDefaultClient().Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -130,7 +120,11 @@ func FetchProblems(contest string) (*http.Response, error) {
 		return nil, err
 	}
 
-	res, err := requestHandler(req)
+	if err := setCookie(req); err != nil {
+		return nil, err
+	}
+
+	res, err := getDefaultClient().Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -151,7 +145,11 @@ func FetchProblemPage(contest, problem string) (*http.Response, error) {
 		return nil, err
 	}
 
-	res, err := requestHandler(req)
+	if err := setCookie(req); err != nil {
+		return nil, err
+	}
+
+	res, err := getDefaultClient().Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -169,7 +167,11 @@ func FetchSubmitPage(contest string) (*http.Response, error) {
 		return nil, err
 	}
 
-	return requestHandler(req)
+	if err := setCookie(req); err != nil {
+		return nil, err
+	}
+
+	return getDefaultClient().Do(req)
 }
 
 func FetchHomePage() (*http.Response, error) {
@@ -178,7 +180,11 @@ func FetchHomePage() (*http.Response, error) {
 		return nil, err
 	}
 
-	return requestHandler(req)
+	if err := setCookie(req); err != nil {
+		return nil, err
+	}
+
+	return getDefaultClient().Do(req)
 }
 
 func FetchSubmissionsMe(contest string) (*http.Response, error) {
@@ -187,7 +193,11 @@ func FetchSubmissionsMe(contest string) (*http.Response, error) {
 		return nil, err
 	}
 
-	return requestHandler(req)
+	if err := setCookie(req); err != nil {
+		return nil, err
+	}
+
+	return getDefaultClient().Do(req)
 }
 
 func FetchSubmissionDetail(contest, submissionID string) (*http.Response, error) {
@@ -196,7 +206,11 @@ func FetchSubmissionDetail(contest, submissionID string) (*http.Response, error)
 		return nil, err
 	}
 
-	return requestHandler(req)
+	if err := setCookie(req); err != nil {
+		return nil, err
+	}
+
+	return getDefaultClient().Do(req)
 }
 
 func PostProblemAnswer(contest, problem, lang, code string) (*http.Response, error) {
@@ -205,9 +219,8 @@ func PostProblemAnswer(contest, problem, lang, code string) (*http.Response, err
 		return nil, err
 	}
 
-	client := &http.Client{
-		Jar: jar,
-	}
+	client := getDefaultClient()
+	client.Jar = jar
 
 	submitUrl := GetAtcoderUrl("contests", contest, "submit")
 
@@ -216,7 +229,11 @@ func PostProblemAnswer(contest, problem, lang, code string) (*http.Response, err
 		return nil, err
 	}
 
-	res, err := requestHandler(req)
+	if err := setCookie(req); err != nil {
+		return nil, err
+	}
+
+	res, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}
