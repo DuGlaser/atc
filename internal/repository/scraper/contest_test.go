@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-var html = `
+var h3Example = `
 <div id="main-div">
   <div id="main-container">
     <div id="contest-nav-tabs">
@@ -123,33 +123,162 @@ var html = `
 </div>
 `
 
+var h2Example = `
+<div id="main-div">
+  <div id="main-container">
+    <div id="contest-nav-tabs">
+      <small class="contest-duration">
+        <small class="contest-duration">
+          コンテスト時間:
+          <a href="https://example.com?iso=20230812T2100&amp;p1=248" target="blank">
+            <time class="fixtime-full">2023-08-12(土) 21:00</time>
+          </a>
+          ~ 
+          <a href="https://example.com?iso=20230812T2240&amp;p1=248" target="blank">
+            <time class="fixtime-full">2023-08-12(土) 22:40</time>
+
+          </a> 
+          (100分)
+        </small>
+      </small>
+    </div>
+  </div>
+
+  <div id="contest-statement">
+    <span>
+      <span>
+        <h2>配点</h2>
+        <section>
+          <div>
+            <table>
+              <thead>
+                <tr>
+                  <th>問題</th>
+                  <th>点数</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>A</td>
+                  <td>100</td>
+                </tr>
+                <tr>
+                  <td>B</td>
+                  <td>200</td>
+                </tr>
+                <tr>
+                  <td>C</td>
+                  <td>300</td>
+                </tr>
+                <tr>
+                  <td>D</td>
+                  <td>400</td>
+                </tr>
+                <tr>
+                  <td>E</td>
+                  <td>500</td>
+                </tr>
+                <tr>
+                  <td>F</td>
+                  <td>500</td>
+                </tr>
+                <tr>
+                  <td>G</td>
+                  <td>600</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <h2>賞金</h2>
+        <section>
+          <div>
+            <table>
+              <thead>
+                <tr>
+                  <th>順位</th>
+                  <th>金額</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1位</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>2位</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>3位</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>4位</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>5位</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>6位</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>7位</td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </span>
+    </span>
+  </div>
+</div>
+`
+
 func TestGetProblemIds(t *testing.T) {
 	expect := []string{"a", "b", "c", "d", "e", "f", "g"}
-
-	cp, err := NewContestPage(strings.NewReader(html))
-	if err != nil {
-		t.Fatal("Failed to create ContestPage.")
+	var tests = []struct {
+		name  string
+		inupt string
+	}{
+		{"h3Example", h3Example},
+		{"h2Example", h2Example},
 	}
 
-	ids := cp.GetProblemIds()
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			cp, err := NewContestPage(strings.NewReader(test.inupt))
+			if err != nil {
+				t.Fatal("Failed to create ContestPage.")
+			}
 
-	if len(ids) != len(expect) {
-		t.Fatalf("ids has wrong value. got=%v.", ids)
+			ids := cp.GetProblemIds()
+
+			if len(ids) != len(expect) {
+				t.Errorf("ids has wrong value. got=%v.", ids)
+			}
+
+			for i, _ := range ids {
+				id := ids[i].DisplayID
+
+				if id != expect[i] {
+					t.Errorf("ids has wrong value. got=%v, want=%v.", ids, expect)
+				}
+			}
+		})
 	}
 
-	for i, _ := range ids {
-		id := ids[i].DisplayID
-
-		if id != expect[i] {
-			t.Errorf("ids has wrong value. got=%v, want=%v.", ids, expect)
-		}
-	}
 }
 
 func TestGetStartAt(t *testing.T) {
 	expect, _ := time.Parse("20060102T1504", "20230812T2100")
 
-	cp, err := NewContestPage(strings.NewReader(html))
+	cp, err := NewContestPage(strings.NewReader(h3Example))
 	if err != nil {
 		t.Fatal(err)
 	}

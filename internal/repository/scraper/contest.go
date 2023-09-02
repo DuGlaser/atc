@@ -36,7 +36,7 @@ type Problem struct {
 
 func (cp *ContestPage) GetProblemIds() []Problem {
 	ps := []Problem{}
-	cp.doc.Find("div#contest-statement h3").Each(func(i int, s *goquery.Selection) {
+	cp.doc.Find("div#contest-statement h3, div#contest-statement h2").Each(func(i int, s *goquery.Selection) {
 		if s.Text() == "配点" {
 			s.Next().Find("table tbody tr > td:first-child").Each(func(i int, s *goquery.Selection) {
 				t := strings.ToLower(s.Text())
