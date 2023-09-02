@@ -11,6 +11,7 @@ import (
 	"github.com/DuGlaser/atc/internal/repository/fetcher"
 	"github.com/DuGlaser/atc/internal/repository/scraper"
 	"github.com/DuGlaser/atc/internal/ui"
+	"github.com/DuGlaser/atc/internal/util"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -40,6 +41,7 @@ func CreateProject(contestID string) {
 			cobra.CheckErr(fmt.Sprintf("Problems doesn't exists in %s.\n", contestID))
 		}
 	}
+	util.InfoLog(fmt.Sprintf("problem ids %s", util.JsonLog(ids)))
 
 	wd, err := os.Getwd()
 	cobra.CheckErr(err)
@@ -107,5 +109,6 @@ func CreateProject(contestID string) {
 		v.Set(fmt.Sprintf("%s.path", key), fp)
 	}
 
+	util.InfoLog(fmt.Sprintf("contest config %s", util.JsonLog(c)))
 	v.SafeWriteConfigAs(path.Join(contestPath, "contest.toml"))
 }

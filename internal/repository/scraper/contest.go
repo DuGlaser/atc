@@ -29,9 +29,9 @@ func NewContestPage(r io.Reader) (*ContestPage, error) {
 
 type Problem struct {
 	// URLに使われる、コンテスト内の問題を一意に識別するID
-	ID string
+	ID string `json:"id"`
 	// 問題ページで表示される一意なID
-	DisplayID string
+	DisplayID string `json:"display_id"`
 }
 
 func (cp *ContestPage) GetProblemIds() []Problem {

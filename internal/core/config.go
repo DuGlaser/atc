@@ -13,11 +13,11 @@ type Language struct {
 }
 
 type Config struct {
-	RunCmd   string
-	BuildCmd string
-	Lang     string
-	FileName string
-	Template string
+	RunCmd   string `json:"run_cmd"`
+	BuildCmd string `json:"build_cmd"`
+	Lang     string `json:"lang"`
+	FileName string `json:"file_name"`
+	Template string `json:"template"`
 }
 
 func (c *Config) Validate() error {
