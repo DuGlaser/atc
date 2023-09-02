@@ -5,11 +5,11 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/DuGlaser/atc/internal"
 	"github.com/DuGlaser/atc/internal/core"
 	"github.com/DuGlaser/atc/internal/repository/config"
 	"github.com/DuGlaser/atc/internal/repository/fetcher"
 	"github.com/DuGlaser/atc/internal/repository/scraper"
+	"github.com/DuGlaser/atc/internal/util"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
@@ -47,12 +47,12 @@ func TestCode(option TestOption) TestResults {
 		cobra.CheckErr(err)
 	}
 
+	util.InfoLog("Read contest settisg")
 	contest, err := cc.ReadContestSetting()
+	util.InfoLog(util.JsonLog(contest))
 	cobra.CheckErr(err)
 
-	if internal.Verbose {
-		fmt.Println("Fetch test cases...")
-	}
+	util.InfoLog("Fetch test cases")
 	res, err := fetcher.FetchProblemPage(contest.Name, task.ID)
 	cobra.CheckErr(err)
 	defer res.Body.Close()
@@ -61,6 +61,7 @@ func TestCode(option TestOption) TestResults {
 	cobra.CheckErr(err)
 
 	tests, err := pp.GetTaskTestCases()
+	util.InfoLog(fmt.Sprintf("test cases %s", util.JsonLog(tests)))
 	cobra.CheckErr(err)
 
 	if len(tests) == 0 {
@@ -69,6 +70,7 @@ func TestCode(option TestOption) TestResults {
 	}
 
 	config, err := cc.ReadConfig()
+	util.InfoLog(fmt.Sprintf("config %s", util.JsonLog(config)))
 	cobra.CheckErr(err)
 
 	cobra.CheckErr(config.GenerateCmd(task.Path, config.FileName))

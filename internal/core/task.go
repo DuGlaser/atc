@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/DuGlaser/atc/internal"
+	"github.com/DuGlaser/atc/internal/util"
 )
 
 type Task struct {
@@ -35,9 +35,7 @@ func (t *Task) ExecHandleCode() (result, error) {
 		fmt.Println("Ready to go!!")
 	}
 
-	if internal.Verbose {
-		fmt.Println("Run code...")
-	}
+	util.InfoLog("Run code")
 
 	start := time.Now()
 	cmd := exec.Command("sh", "-c", t.RunCmd)
@@ -67,9 +65,7 @@ func (t *Task) ExecCode(input string) (result, error) {
 		return result, err
 	}
 
-	if internal.Verbose {
-		fmt.Println("Run code...")
-	}
+	util.InfoLog("Run code")
 
 	start := time.Now()
 	cmd := exec.Command("sh", "-c", t.RunCmd)
@@ -113,9 +109,7 @@ func (t *Task) BuildCode() error {
 		return nil
 	}
 
-	if internal.Verbose {
-		fmt.Println("Build code...")
-	}
+	util.InfoLog("Build code")
 
 	cmd := exec.Command("sh", "-c", t.BuildCmd)
 	var stderr bytes.Buffer
@@ -124,10 +118,6 @@ func (t *Task) BuildCode() error {
 	_, err := cmd.Output()
 	if err != nil {
 		return errors.New(stderr.String())
-	}
-
-	if internal.Verbose {
-		fmt.Println(stderr.String())
 	}
 
 	t.alreadyBuild = true

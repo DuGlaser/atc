@@ -3,9 +3,9 @@ package core
 import "strings"
 
 type TestCase struct {
-	ID       int
-	In       string
-	Expected string
+	ID       int    `toml:"id"`
+	In       string `toml:"in"`
+	Expected string `toml:"expected"`
 }
 
 func (tc *TestCase) Compare(result string) bool {
