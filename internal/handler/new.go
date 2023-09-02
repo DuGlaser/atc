@@ -16,7 +16,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func CreateProject(contestID string, verbose bool) {
+func CreateProject(contestID string) {
 	res, err := fetcher.FetchContestPage(contestID)
 	cobra.CheckErr(err)
 

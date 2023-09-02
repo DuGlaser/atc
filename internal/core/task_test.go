@@ -20,7 +20,7 @@ func TestExecCode(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		_, err := test.task.ExecCode("", false)
+		_, err := test.task.ExecCode("")
 
 		if test.hasError && err == nil {
 			t.Fatalf("No error occurd. commad=`%s`", test.task.RunCmd)
@@ -48,7 +48,7 @@ func TestBuildCode(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		err := test.task.BuildCode(false)
+		err := test.task.BuildCode()
 
 		if test.hasError && err == nil {
 			t.Fatalf("No error occurd. commad=`%s`", test.task.RunCmd)

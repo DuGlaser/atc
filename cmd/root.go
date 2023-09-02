@@ -1,6 +1,5 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
@@ -8,13 +7,10 @@ import (
 	"os"
 	"runtime/debug"
 
+	"github.com/DuGlaser/atc/internal"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
-
-var cfgFile string
-var verbose bool
-var version string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -35,7 +31,7 @@ func Execute() {
 
 func setVersion() {
 	if info, ok := debug.ReadBuildInfo(); ok {
-		version = info.Main.Version
+		internal.Version = info.Main.Version
 	}
 }
 
@@ -43,9 +39,9 @@ func init() {
 	setVersion()
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/.atc.toml)")
-	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "Make the operation more talkative")
-	rootCmd.SetVersionTemplate(version)
+	rootCmd.PersistentFlags().StringVar(&internal.CfgFile, "config", "", "config file (default is $HOME/.config/.atc.toml)")
+	rootCmd.PersistentFlags().BoolVarP(&internal.Verbose, "verbose", "v", false, "Make the operation more talkative")
+	rootCmd.SetVersionTemplate(internal.Version)
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -54,9 +50,9 @@ func init() {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	if cfgFile != "" {
+	if internal.CfgFile != "" {
 		// Use config file from the flag.
-		viper.SetConfigFile(cfgFile)
+		viper.SetConfigFile(internal.CfgFile)
 	} else {
 		// Find home directory.
 		config, err := os.UserConfigDir()

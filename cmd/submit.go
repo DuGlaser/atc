@@ -23,7 +23,7 @@ var submitCmd = &cobra.Command{
 			to := handler.TestOption{}
 			to.DisplayID = displayID
 
-			trs := handler.TestCode(to, verbose)
+			trs := handler.TestCode(to)
 			if !trs.Pass {
 				os.Exit(1)
 			}
@@ -32,7 +32,7 @@ var submitCmd = &cobra.Command{
 				confirm()
 			}
 		}
-		handler.SubmitCode(displayID, verbose)
+		handler.SubmitCode(displayID)
 	},
 }
 

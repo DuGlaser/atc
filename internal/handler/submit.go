@@ -16,7 +16,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func SubmitCode(displayID string, verbose bool) {
+func SubmitCode(displayID string) {
 	cc, err := config.NewContestConfig()
 	cobra.CheckErr(err)
 

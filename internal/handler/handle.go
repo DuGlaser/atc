@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func HaldleExec(displayID string, verbose bool) {
+func HaldleExec(displayID string) {
 	cc, err := config.NewContestConfig()
 	cobra.CheckErr(err)
 
@@ -27,7 +27,7 @@ func HaldleExec(displayID string, verbose bool) {
 	}
 
 	for {
-		result, err := t.ExecHandleCode(verbose)
+		result, err := t.ExecHandleCode()
 		cobra.CheckErr(err)
 		fmt.Println()
 

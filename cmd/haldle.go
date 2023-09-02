@@ -14,7 +14,7 @@ var handleCmd = &cobra.Command{
 	Run: func(_ *cobra.Command, args []string) {
 		displayID := args[0]
 
-		handler.HaldleExec(displayID, verbose)
+		handler.HaldleExec(displayID)
 	},
 }
 

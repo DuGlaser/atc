@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/DuGlaser/atc/internal"
 	"github.com/DuGlaser/atc/internal/core"
 	"github.com/DuGlaser/atc/internal/repository/config"
 	"github.com/DuGlaser/atc/internal/repository/fetcher"
@@ -34,7 +35,7 @@ type TestOption struct {
 	EnableCaseIDs []int
 }
 
-func TestCode(option TestOption, verbose bool) TestResults {
+func TestCode(option TestOption) TestResults {
 	cc, err := config.NewContestConfig()
 	cobra.CheckErr(err)
 
@@ -49,7 +50,7 @@ func TestCode(option TestOption, verbose bool) TestResults {
 	contest, err := cc.ReadContestSetting()
 	cobra.CheckErr(err)
 
-	if verbose {
+	if internal.Verbose {
 		fmt.Println("Fetch test cases...")
 	}
 	res, err := fetcher.FetchProblemPage(contest.Name, task.ID)
@@ -80,7 +81,7 @@ func TestCode(option TestOption, verbose bool) TestResults {
 	tests, err = filterTestCase(tests, option)
 	cobra.CheckErr(err)
 
-	results := execTestCase(t, tests, verbose)
+	results := execTestCase(t, tests)
 	failures := []result{}
 
 	trs := TestResults{
@@ -122,11 +123,11 @@ func filterTestCase(tests []core.TestCase, option TestOption) ([]core.TestCase, 
 	return filtered, nil
 }
 
-func execTestCase(t *core.Task, tests []core.TestCase, verbose bool) []result {
+func execTestCase(t *core.Task, tests []core.TestCase) []result {
 	results := []result{}
 
 	for _, test := range tests {
-		r, err := t.ExecCode(test.In, verbose)
+		r, err := t.ExecCode(test.In)
 
 		pass := test.Compare(r.Out)
 

@@ -3,13 +3,14 @@ package handler
 import (
 	"fmt"
 
+	"github.com/DuGlaser/atc/internal"
 	"github.com/DuGlaser/atc/internal/repository/config"
 	"github.com/DuGlaser/atc/internal/repository/fetcher"
 	"github.com/DuGlaser/atc/internal/util"
 	"github.com/spf13/cobra"
 )
 
-func OpenTask(displayID string, verbose bool) {
+func OpenTask(displayID string) {
 	cc, err := config.NewContestConfig()
 	cobra.CheckErr(err)
 
@@ -25,7 +26,7 @@ func OpenTask(displayID string, verbose bool) {
 
 	url := fetcher.GetAtcoderUrl("contests", contest.Name, "tasks", task.ID)
 
-	if verbose {
+	if internal.Verbose {
 		fmt.Printf("Open %s", url)
 	}
 	util.Openbrowser(url)

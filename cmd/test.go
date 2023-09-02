@@ -26,7 +26,7 @@ var testCmd = &cobra.Command{
 			to.EnableCaseIDs = is
 		}
 
-		trs := handler.TestCode(to, verbose)
+		trs := handler.TestCode(to)
 		if !trs.Pass {
 			os.Exit(1)
 		}

@@ -9,6 +9,8 @@ import (
 	"os/exec"
 	"strings"
 	"time"
+
+	"github.com/DuGlaser/atc/internal"
 )
 
 type Task struct {
@@ -22,11 +24,10 @@ type result struct {
 	TimeMs int64
 }
 
-func (t *Task) ExecHandleCode(verbose bool) (result, error) {
-
+func (t *Task) ExecHandleCode() (result, error) {
 	var result result
 	if !t.alreadyBuild {
-		err := t.BuildCode(verbose)
+		err := t.BuildCode()
 		if err != nil {
 			return result, err
 		}
@@ -34,7 +35,7 @@ func (t *Task) ExecHandleCode(verbose bool) (result, error) {
 		fmt.Println("Ready to go!!")
 	}
 
-	if verbose {
+	if internal.Verbose {
 		fmt.Println("Run code...")
 	}
 
@@ -59,14 +60,14 @@ func (t *Task) ExecHandleCode(verbose bool) (result, error) {
 	return result, nil
 }
 
-func (t *Task) ExecCode(input string, verbose bool) (result, error) {
+func (t *Task) ExecCode(input string) (result, error) {
 	var result result
-	err := t.BuildCode(verbose)
+	err := t.BuildCode()
 	if err != nil {
 		return result, err
 	}
 
-	if verbose {
+	if internal.Verbose {
 		fmt.Println("Run code...")
 	}
 
@@ -102,7 +103,7 @@ func (t *Task) ExecCode(input string, verbose bool) (result, error) {
 	return result, nil
 }
 
-func (t *Task) BuildCode(verbose bool) error {
+func (t *Task) BuildCode() error {
 	if t.BuildCmd == "" {
 		t.alreadyBuild = true
 		return nil
@@ -112,7 +113,7 @@ func (t *Task) BuildCode(verbose bool) error {
 		return nil
 	}
 
-	if verbose {
+	if internal.Verbose {
 		fmt.Println("Build code...")
 	}
 
@@ -125,7 +126,7 @@ func (t *Task) BuildCode(verbose bool) error {
 		return errors.New(stderr.String())
 	}
 
-	if verbose {
+	if internal.Verbose {
 		fmt.Println(stderr.String())
 	}
 

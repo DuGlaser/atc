@@ -15,7 +15,7 @@ var newCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		cobra.CheckErr(viper.ReadInConfig())
 		contest := args[0]
-		handler.CreateProject(contest, true)
+		handler.CreateProject(contest)
 	},
 }
 
