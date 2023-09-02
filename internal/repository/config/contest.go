@@ -20,8 +20,8 @@ type Contest struct {
 }
 
 type Task struct {
-	ID   string
-	Path string
+	ID   string `json:"id"`
+	Path string `json:"path"`
 }
 
 type ContestConfig struct {

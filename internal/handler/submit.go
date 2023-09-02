@@ -2,13 +2,14 @@ package handler
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"strings"
 	"time"
 
 	"github.com/DuGlaser/atc/internal/repository/config"
 	"github.com/DuGlaser/atc/internal/repository/fetcher"
 	"github.com/DuGlaser/atc/internal/repository/scraper"
+	"github.com/DuGlaser/atc/internal/util"
 	"github.com/briandowns/spinner"
 	"github.com/fatih/color"
 	"github.com/k0kubun/go-ansi"
@@ -27,14 +28,17 @@ func SubmitCode(displayID string) {
 		err := cc.SetTaskID(displayID)
 		cobra.CheckErr(err)
 	}
+	util.InfoLog(fmt.Sprintf("task %s", util.JsonLog(task)))
 
-	bytes, err := ioutil.ReadFile(task.Path)
+	bytes, err := os.ReadFile(task.Path)
 	cobra.CheckErr(err)
 
 	contest, err := cc.ReadContestSetting()
+	util.InfoLog(fmt.Sprintf("content config %s", util.JsonLog(contest)))
 	cobra.CheckErr(err)
 
 	config, err := cc.ReadConfig()
+	util.InfoLog(fmt.Sprintf("config %s", util.JsonLog(config)))
 	cobra.CheckErr(err)
 
 	_, err = fetcher.PostProblemAnswer(contest.Name, task.ID, config.Lang, string(bytes))
