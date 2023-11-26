@@ -6,7 +6,7 @@ require (
 	github.com/PuerkitoBio/goquery v1.8.1
 	github.com/briandowns/spinner v1.23.0
 	github.com/fatih/color v1.15.0
-	github.com/henvic/httpretty v0.1.2
+	github.com/henvic/httpretty v0.1.3
 	github.com/k0kubun/go-ansi v0.0.0-20180517002512-3bf9e2903213
 	github.com/manifoldco/promptui v0.9.0
 	github.com/schollz/progressbar/v3 v3.14.1
